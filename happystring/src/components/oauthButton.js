@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => {
           color: '#ffffff',
         },
         buttonForm:{
-          margin: theme.spacing(2,0,2,0),
+          margin: theme.spacing(0,0,2,0),
         },
         divider:{
           fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
@@ -46,6 +46,7 @@ export default function OauthButton(params) {
             >
               Login with Google
             </Button>
+            <br/>
             <Button
               variant="contained"
               color="primary"
@@ -53,10 +54,14 @@ export default function OauthButton(params) {
                 className={classes.googleButton}
               startIcon={<FacebookIcon/>}
             >
-              Login with Facebook
+              
             </Button>
             </form>
-        <div className={"seperator " + classes.divider}>Or</div>
+        <div className={"seperator " + classes.divider}>
+          <div style={{fontSize: '15px', fontWeight: 'bold',textTransform: 'capitalize'}}>
+          OR
+          </div>
+          </div>
         </>
     )
 }

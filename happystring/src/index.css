@@ -11,3 +11,26 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.seperator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  width: 518px;
+  margin: 5px;
+  
+}
+
+.seperator::before,
+.seperator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 0.5px solid #757575;
+}
+
+.seperator:not(:empty)::before {
+  margin-right: 0.5em;
+}
+
+.seperator:not(:empty)::after {
+  margin-left: 0.5em;
+}
