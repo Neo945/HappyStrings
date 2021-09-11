@@ -10,7 +10,7 @@ import {
   Box,
 } from "@material-ui/core";
 import OauthButton from "./oauthButton";
-import { lookup } from "./fetchData/lookup";
+// import { lookup } from "./fetchData/lookup";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -63,7 +63,7 @@ export default function Login() {
     formdata.forEach((e, v) => {
       data[v] = e;
     });
-    lookup("POST", data, "/api/auth/user/login");
+    // lookup("POST", data, "/api/auth/user/login");
   }
   const classes = useStyles();
   return (

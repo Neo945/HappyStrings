@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Icon } from "@material-ui/core";
-import FacebookIcon from "@material-ui/icons/Facebook";
+import PhoneIcon from "@material-ui/icons/Phone";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -59,8 +59,10 @@ export default function OauthButton(params) {
           color="primary"
           fullWidth
           className={classes.googleButton}
-          startIcon={<FacebookIcon />}
-        ></Button>
+          startIcon={<PhoneIcon />}
+        >
+          Phone Number
+        </Button>
       </form>
       <div className={"seperator " + classes.divider}>
         <div
