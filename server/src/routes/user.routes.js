@@ -1,12 +1,15 @@
 const router = require('express').Router();
 const view = require('../controllers/user.controllers');
-const isa = require('../middleware/authCheck.middleware');
+const isa = require('../middlewares/authCheck.middleware');
 const passport = require('../config/passport.config');
 
-router.post('/add', view.register);
-router.get('/users', isa, view.getAllUser);
+router.get('/get', view.getUser);
+router.post('/register', view.registerUser);
+router.post('/create', view.createUserForExistingUser);
 router.post('/login', view.login);
 router.get('/logout', isa, view.logout);
+router.post('/email', view.sendEmailVerfication);
+router.post('/email/verify', view.verifyEmailToken);
 
 router.get(
     '/google',

@@ -1,30 +1,30 @@
-const { User, Artist } = require('../models/user');
+const { User, BaseUser } = require('../models/user');
 const { errorHandler } = require('../utils/errorHandler');
 const transport = require('../config/mailer.config');
 
 module.exports = {
     getUser: (req, res) => {
         errorHandler(req, res, async () => {
-            const artist = await Artist.findOne({ user: req.user._id }).populate('user', '-password');
+            const artist = await User.findOne({ user: req.user._id }).populate('BaseUser', '-password');
             res.status(200).json({ message: 'success', artist });
         });
     },
-    createArtistForExistingUser: (req, res) => {
+    createUserForBaseUser: (req, res) => {
         errorHandler(req, res, async () => {
-            const newArtistAccount = await Artist.create({ ...req.body, user: req.user._id });
+            const newArtistAccount = await User.create({ ...req.body, user: req.user._id });
             res.status(201).json({ message: 'success', user: newArtistAccount });
         });
     },
     registerUser: (req, res) => {
         errorHandler(req, res, async () => {
-            const newUser = await User.create({ ...req.body });
+            const newUser = await BaseUser.create({ ...req.body });
             res.status(201).json({ message: 'success', user: { ...newUser, password: null } });
         });
     },
     login: (req, res) => {
         errorHandler(req, res, async () => {
             const { password, email } = req.body;
-            const token = await User.login(email, password);
+            const token = await BaseUser.login(email, password);
             if (token) {
                 res.cookie('jwt', token, {
                     maxAge: require('../config/config').TOKEN_LENGTH,
@@ -53,7 +53,7 @@ module.exports = {
     sendEmailVerfication: async (req, res) => {
         errorHandler(req, res, async () => {
             const { email } = req.body;
-            const token = await User.generateEmailVerificationToken(email);
+            const token = await BaseUser.generateEmailVerificationToken(email);
             if (token) {
                 const url = `http://localhost:3000/verify/${token}`;
                 const message = `<h1>Please verify your email</h1>
@@ -69,7 +69,7 @@ module.exports = {
     verifyEmailToken: async (req, res) => {
         errorHandler(req, res, async () => {
             const { token } = req.query;
-            const isVerified = await User.verifyEmailToken(req._id, token);
+            const isVerified = await BaseUser.verifyEmailToken(req._id, token);
             if (isVerified) {
                 res.json({ message: 'success' });
             } else {
