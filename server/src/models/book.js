@@ -1,0 +1,49 @@
+const mongoose = require('mongoose');
+const validator = require('validator').default;
+
+const { Schema } = mongoose;
+
+const BookSchema = new Schema(
+    {
+        title: {
+            type: String,
+            required: true,
+        },
+        description: {
+            type: String,
+            required: true,
+            maxlength: 1000,
+        },
+        aurther: {
+            type: Schema.Types.ObjectId,
+            ref: 'Aurthor',
+            required: true,
+        },
+        price: {
+            type: Number,
+            required: true,
+        },
+        image: {
+            type: String,
+            required: true,
+            validate: [validator.isURL, 'Invalid URL'],
+        },
+        shop: {
+            type: Schema.Types.ObjectId,
+            ref: 'Shop',
+            required: true,
+        },
+        stock: {
+            type: Number,
+            required: true,
+            minValue: 0,
+            maxValue: 100,
+        },
+    },
+    {
+        timestamps: true,
+    }
+);
+
+const Book = mongoose.model('Book', BookSchema);
+module.exports = Book;
