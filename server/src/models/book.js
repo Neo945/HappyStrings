@@ -14,6 +14,14 @@ const BookSchema = new Schema(
             required: true,
             maxlength: 1000,
         },
+        category: {
+            type: String,
+            required: true,
+            enum: {
+                values: ['Fiction', 'Non-Fiction', 'Children', 'Others'],
+                message: '{VALUE} is not the correct type',
+            },
+        },
         aurther: {
             type: Schema.Types.ObjectId,
             ref: 'Aurthor',
