@@ -1,1 +1,4 @@
 .github
+.env
+/server/src/config/.env
+server/src/config/.env

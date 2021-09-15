@@ -18,7 +18,7 @@ const BookSchema = new Schema(
             type: String,
             required: true,
             enum: {
-                values: ['Fiction', 'Non-Fiction', 'Children', 'Others'],
+                values: ['Fiction', 'Non-Fiction', 'Children', 'Others', 'Fantasy'],
                 message: '{VALUE} is not the correct type',
             },
         },
@@ -52,6 +52,15 @@ const BookSchema = new Schema(
         timestamps: true,
     }
 );
+
+BookSchema.pre('remove', async (next) => {
+    console.log('Book removed', this);
+    next();
+});
+BookSchema.post('remove', async (doc, next) => {
+    console.log('Book removed', this, doc);
+    next();
+});
 
 const Book = mongoose.model('Book', BookSchema);
 module.exports = Book;

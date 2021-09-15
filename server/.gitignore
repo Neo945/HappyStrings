@@ -1,1 +1,13 @@
-node_modules
+/node_modules
+
+test.http
+
+docs
+test
+
+run.env.js
+
+README.md
+genre.json
+
+coverage

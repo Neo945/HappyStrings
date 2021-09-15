@@ -22,6 +22,7 @@ app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(express.json());
 if (process.env.NODE_ENV === 'development') app.use(require('morgan')('dev'));
 app.use(require('./middlewares/UserAuth.middleware'));
+app.use('/api', require('./router'));
 
 app.use('/static', express.static(path.join(__dirname, 'public')));
 
