@@ -25,7 +25,6 @@ const BookSchema = new Schema(
         aurther: {
             type: Schema.Types.ObjectId,
             ref: 'Aurthor',
-            required: true,
         },
         price: {
             type: Number,
@@ -52,15 +51,6 @@ const BookSchema = new Schema(
         timestamps: true,
     }
 );
-
-BookSchema.pre('remove', async (next) => {
-    console.log('Book removed', this);
-    next();
-});
-BookSchema.post('remove', async (doc, next) => {
-    console.log('Book removed', this, doc);
-    next();
-});
 
 const Book = mongoose.model('Book', BookSchema);
 module.exports = Book;

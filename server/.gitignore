@@ -6,8 +6,11 @@ docs
 test
 
 run.env.js
+.env
+/src/config/.env
 
 README.md
 genre.json
 
 coverage
+.vscode

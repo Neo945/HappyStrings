@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator').default;
+const Book = require('./book');
 
 const { Schema } = mongoose;
 
@@ -46,6 +47,11 @@ const ShopSchema = new Schema(
         timestamps: true,
     }
 );
+
+ShopSchema.post('remove', async (doc, next) => {
+    await Book.remove({ shop: doc._id });
+    next();
+});
 
 const Shop = mongoose.model('Shop', ShopSchema);
 module.exports = Shop;

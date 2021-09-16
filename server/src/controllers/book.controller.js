@@ -87,25 +87,25 @@ module.exports = {
         const shop = await Shop.create({
             name: 'Amazon',
             address: '123 Main St',
-            phone: '123-456-7890',
+            phone: '9372518991',
             email: 'gmail@gmail.com',
             description: 'Best seller',
             image: 'https://images-na.ssl-images-amazon.com/images/I/51',
-            owner: 'a._id',
+            owner: 'a._iddvfhbjh',
         });
         const newBook = await Book.create({
+            aurther: a._id,
             title: 'The Lord of the Rings',
-            description:
-                // eslint-disable-next-line quotes
-                "The Lord of the Rings is an epic high fantasy novel written by English author and scholar J. R. R. Tolkien. The story began as a sequel to Tolkien's 1937 fantasy novel The Hobbit, but eventually developed into a much larger work. Written in stages between 1937 and 1949, The Lord of the Rings is one of the best-selling novels ever written, with over 150 million copies sold",
-            aurthor: a._id,
+            description: 'The Lord of the Rings is an epic high fantasy',
             category: 'Fantasy',
             stock: 10,
             price: 10,
             image: 'https://images-na.ssl-images-amazon.com/images/I/51ZuFnDwd3L._SX331_BO1,204,203,200_.jpg',
             shop: shop._id,
         });
-        await Book.findByIdAndDelete(newBook._id);
+        await newBook.remove();
+        await a.remove();
+        await shop.remove();
         res.status(200).json(newBook);
     },
 };

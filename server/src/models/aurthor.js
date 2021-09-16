@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Book = require('./book');
 
 const { Schema } = mongoose;
 
@@ -13,6 +14,11 @@ const AurthorSchema = new Schema(
         timestamps: true,
     }
 );
+
+AurthorSchema.post('remove', async (doc, next) => {
+    await Book.remove({ aurthor: doc._id });
+    next();
+});
 
 const Aurthor = mongoose.model('Aurthor', AurthorSchema);
 module.exports = Aurthor;
