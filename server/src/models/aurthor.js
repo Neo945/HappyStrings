@@ -16,7 +16,7 @@ const AurthorSchema = new Schema(
 );
 
 AurthorSchema.post('remove', async (doc, next) => {
-    await Book.remove({ aurthor: doc._id });
+    await Book.remove({ aurther: doc._id });
     next();
 });
 

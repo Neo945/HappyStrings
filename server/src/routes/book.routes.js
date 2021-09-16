@@ -1,6 +1,4 @@
 const router = require('express').Router();
-const view = require('../controllers/book.controller');
-
-router.get('/', view.test);
+// const view = require('../controllers/book.controller');
 
 module.exports = router;

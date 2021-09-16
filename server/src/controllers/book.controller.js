@@ -82,30 +82,21 @@ module.exports = {
             500
         );
     },
-    test: async (req, res) => {
-        const a = await Aurthor.create({ name: 'J.R.R. Tolkien' });
-        const shop = await Shop.create({
-            name: 'Amazon',
-            address: '123 Main St',
-            phone: '9372518991',
-            email: 'gmail@gmail.com',
-            description: 'Best seller',
-            image: 'https://images-na.ssl-images-amazon.com/images/I/51',
-            owner: 'a._iddvfhbjh',
-        });
-        const newBook = await Book.create({
-            aurther: a._id,
-            title: 'The Lord of the Rings',
-            description: 'The Lord of the Rings is an epic high fantasy',
-            category: 'Fantasy',
-            stock: 10,
-            price: 10,
-            image: 'https://images-na.ssl-images-amazon.com/images/I/51ZuFnDwd3L._SX331_BO1,204,203,200_.jpg',
-            shop: shop._id,
-        });
-        await newBook.remove();
-        await a.remove();
-        await shop.remove();
-        res.status(200).json(newBook);
+    createBook: async (req, res) => {
+        const { shop, author, book } = req.body;
+        errorHandler(
+            req,
+            res,
+            async () => {
+                const newBook = await Book.create({
+                    ...book,
+                    author: author.id ? author.id : (await Aurthor.create({ ...author }))._id,
+                    shop: shop.id ? shop.id : (await Shop.create({ ...shop }))._id,
+                });
+                res.status(201).json(newBook);
+            },
+            500
+        );
     },
+    addToCart: async (req, res) => {},
 };

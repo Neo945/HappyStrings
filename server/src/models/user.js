@@ -108,6 +108,24 @@ const UserSchema = new Schema({
         type: Number,
         min: [12, 'Grow Up'],
     },
+    cart: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Book',
+        },
+    ],
+    wishlist: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Book',
+        },
+    ],
+    order: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Order',
+        },
+    ],
 });
 
 const BaseUser = mongoose.model('BaseUser', BaseUserSchema);
