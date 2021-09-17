@@ -6,7 +6,7 @@ const OrderSchema = new Schema(
     {
         book: {
             type: Schema.Types.ObjectId,
-            ref: 'book',
+            ref: 'Purchase',
             required: true,
         },
         status: {

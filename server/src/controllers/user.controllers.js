@@ -1,4 +1,7 @@
 const { User, BaseUser } = require('../models/user');
+const Book = require('../models/book');
+const Purchase = require('../models/purchase');
+const Order = require('../models/Order');
 const { errorHandler } = require('../utils/errorHandler');
 const transport = require('../config/mailer.config');
 
@@ -76,5 +79,77 @@ module.exports = {
                 res.json({ message: 'User not found' });
             }
         });
+    },
+    addToCart: async (req, res) => {
+        errorHandler(
+            req,
+            res,
+            async () => {
+                const user = await User.findOneAndUpdate({ user: req.user._id }, { $push: { cart: req.params.id } });
+                res.status(200).json(user);
+            },
+            500
+        );
+    },
+    addToWishlist: async (req, res) => {
+        errorHandler(
+            req,
+            res,
+            async () => {
+                const user = await User.findOneAndUpdate({ user: req.user._id }, { $push: { wishlist: req.params.id } });
+                res.status(200).json(user);
+            },
+            500
+        );
+    },
+    purchaseBook: async (req, res) => {
+        errorHandler(
+            req,
+            res,
+            async () => {
+                const user = await User.findOne({ user: req.user._id });
+                const book = await Book.findOne({ _id: req.body.id });
+                book.stock -= req.body.quantity;
+                await book.save();
+                const purchase = await Purchase.create({ user: user._id, book: book._id, quantity: req.body.quantity });
+                const order = await Order.create({ user: user._id, purchase: purchase._id });
+                res.status(200).json({ message: 'success', order });
+            },
+            500
+        );
+    },
+    getCart: async (req, res) => {
+        errorHandler(
+            req,
+            res,
+            async () => {
+                const user = await User.findOne({ user: req.user._id }).populate('Book', '-_id -__v -stock');
+                res.status(200).json({ message: 'success', cart: { ...user.cart } });
+            },
+            500
+        );
+    },
+    getWishlist: async (req, res) => {
+        errorHandler(
+            req,
+            res,
+            async () => {
+                const user = await User.findOne({ user: req.user._id }).populate('Book', '-_id -__v -stock');
+                res.status(200).json({ message: 'success', wishlist: { ...user.wishlist } });
+            },
+            500
+        );
+    },
+    getPurchaseHistory: async (req, res) => {
+        errorHandler(
+            req,
+            res,
+            async () => {
+                const user = await User.findOne({ user: req.user._id });
+                const purchase = await Purchase.find({ user: user._id }).populate('Book', '-_id -__v -stock');
+                res.status(200).json({ message: 'success', purchase: { ...purchase } });
+            },
+            500
+        );
     },
 };

@@ -98,5 +98,4 @@ module.exports = {
             500
         );
     },
-    addToCart: async (req, res) => {},
 };

@@ -120,12 +120,6 @@ const UserSchema = new Schema({
             ref: 'Book',
         },
     ],
-    order: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Order',
-        },
-    ],
 });
 
 const BaseUser = mongoose.model('BaseUser', BaseUserSchema);
