@@ -31,7 +31,7 @@ function Navbar(params) {
             src={logo}
             alt=""
             style={{
-              height: "65px",
+              height: "50px",
               margin: "15px",
             }}
           />
