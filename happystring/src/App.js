@@ -1,9 +1,8 @@
 import "./App.css";
 // eslint-disable-next-line
-import { Login, Signup } from "./components";
+import { Login, Signup, Navbar } from "./components";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
-import { Box } from "@material-ui/core";
 
 function App() {
   makeStyles((theme) => ({
@@ -22,7 +21,7 @@ function App() {
   return (
     <div>
       <Router>
-        <Box height="64px" />
+        <Navbar />
         <Switch>
           <Route path="/login">
             <Login />
@@ -30,6 +29,7 @@ function App() {
           <Route path="/signup">
             <Signup />
           </Route>
+          <Route path="/"></Route>
         </Switch>
       </Router>
     </div>

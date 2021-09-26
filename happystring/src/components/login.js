@@ -1,4 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
+import isEmail from "validator/lib/isEmail";
+import { useState } from "react";
 import {
   Button,
   TextField,
@@ -22,6 +24,7 @@ const useStyles = makeStyles((theme) => {
       borderRadius: "37px",
       flexDirection: "column",
       alignItems: "center",
+      height: "70vh",
     },
     form: {
       width: "512px",
@@ -56,18 +59,12 @@ const useStyles = makeStyles((theme) => {
 });
 
 export default function Login() {
-  function formHandle(event) {
-    event.preventDefault();
-    let data = {};
-    const formdata = new FormData(event.target);
-    formdata.forEach((e, v) => {
-      data[v] = e;
-    });
-    // lookup("POST", data, "/api/auth/user/login");
-  }
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState({ email: false, password: false });
   const classes = useStyles();
   return (
     <Box
+      height="100vh"
       component="main"
       maxWidth="xs"
       display="flex"
@@ -83,9 +80,28 @@ export default function Login() {
           Please log in to continue,
         </Typography>
         <OauthButton />
-        <form className={classes.form} onSubmit={formHandle}>
+        <form
+          className={classes.form}
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (form.email && form.password) {
+              if (!isEmail(form.email)) {
+                setError({ ...error, email: true });
+              }
+              // lookup(form);
+            } else {
+              if (!form.email) {
+                setError({ ...error, email: true });
+              }
+              if (!form.password) {
+                setError({ ...error, password: true });
+              }
+            }
+          }}
+        >
           <TextField
             className={classes.text}
+            error={error.email}
             variant="outlined"
             required
             fullWidth
@@ -93,9 +109,17 @@ export default function Login() {
             label="Email Address"
             name="email"
             autoComplete="email"
+            value={form.email}
+            onChange={(event) => {
+              if (error.email) {
+                setError({ ...error, email: false });
+              }
+              setForm({ ...form, email: event.target.value });
+            }}
           />
 
           <TextField
+            error={error.password}
             className={classes.text}
             variant="outlined"
             margin="normal"
@@ -106,6 +130,13 @@ export default function Login() {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={form.password}
+            onChange={(event) => {
+              if (error.password) {
+                setError({ ...error, password: false });
+              }
+              setForm({ ...form, password: event.target.value });
+            }}
           />
           <Grid
             item

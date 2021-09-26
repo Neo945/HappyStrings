@@ -1,18 +1,8 @@
-import { React, useState } from "react";
+import { React } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Button,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-} from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
+import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import logo from "./static/Union.png";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -26,42 +16,25 @@ const useStyles = makeStyles((theme) => {
       marginLeft: "25px",
     },
     navbar: {
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: "#1F1F1F",
     },
   };
 });
 
 function Navbar(params) {
   const classes = useStyles();
-  const [draw, setDraw] = useState(false);
   return (
     <AppBar position="fixed" className={classes.navbar}>
       <Toolbar>
-        <IconButton
-          color="inherit"
-          onClick={() => {
-            setDraw(true);
-          }}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Drawer
-          anchor={"left"}
-          open={draw}
-          onClose={() => {
-            setDraw(false);
-          }}
-        >
-          <div className={classes.drawerList}>
-            <List>
-              <ListItem button>
-                <ListItemText primary="Login" />
-              </ListItem>
-            </List>
-          </div>
-        </Drawer>
         <Typography variant="h4" className={classes.title}>
-          Musica
+          <img
+            src={logo}
+            alt=""
+            style={{
+              height: "65px",
+              margin: "15px",
+            }}
+          />
         </Typography>
         <Link to="/" style={{ textDecoration: "none", color: "white" }}>
           <Button color="inherit">
