@@ -31,8 +31,7 @@ function Navbar(params) {
             src={logo}
             alt=""
             style={{
-              height: "50px",
-              margin: "15px",
+              height: "30px",
             }}
           />
         </Typography>

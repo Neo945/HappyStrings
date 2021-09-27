@@ -1,6 +1,7 @@
 import { Box, Button, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import background from "./static/Background.png";
+import background2 from "./static/background2.png";
 import mobile from "./static/mobile.png";
 import book from "./static/book.jpg";
 
@@ -15,6 +16,10 @@ const useStyle = makeStyles((theme) => ({
   },
   background: {
     background: `url(${background}) no-repeat center`,
+    backgroundSize: "cover",
+  },
+  background2: {
+    background: `url(${background2}) no-repeat center`,
     backgroundSize: "cover",
   },
   image: {
@@ -37,7 +42,7 @@ const useStyle = makeStyles((theme) => ({
     backgroundColor: "white",
   },
   text2: {
-    fontSize: "1.5em",
+    fontSize: "1.55m",
     fontWeight: "bold",
   },
   book: {
@@ -66,7 +71,7 @@ export default function HomePage() {
   const classes = useStyle();
   return (
     <Paper className="homepage" width="100%">
-      <div className="homepage" style={{ width: "100vw", height: "200vh" }}>
+      <div className="homepage" style={{ width: "100vw", height: "375vh" }}>
         <Box width="110px" />
         <Box
           width="100%"
@@ -90,22 +95,28 @@ export default function HomePage() {
             style={{
               position: "absolute",
               background:
-                "linear-gradient(rgba(15, 15, 15, 0),rgba(18,18,18,0.7))",
+                "linear-gradient(rgba(15, 15, 15, 0),rgba(18,18,18,0.1))",
               bottom: 0,
               height: "100px",
+              width: "100%",
+              margin: 0,
+              padding: 0,
             }}
           ></div>
         </Box>
         <Box
           width="100%"
-          height="100vh"
+          height="130vh"
           style={{
-            // background: `linear-gradient(rgba(15, 15, 15, 0.5),rgba(18,18,18,1))`,
             background: `#111111`,
           }}
         >
           {["Trending", "New Books"].map((text, index) => (
-            <Box maxWidth="sm" padding="5%">
+            <Box
+              maxWidth="sm"
+              key={index}
+              style={{ marginRight: "5%", marginLeft: "5%" }}
+            >
               <Typography className={classes.text2}>{text}</Typography>
               <div
                 style={{
@@ -137,6 +148,53 @@ export default function HomePage() {
               </div>
             </Box>
           ))}
+        </Box>
+        <Box
+          width="100%"
+          height="100vh"
+          display="flex"
+          justifyContent="space-evenly"
+          flexDirection="column"
+          alignItems="flex-start"
+          className={classes.background2}
+          position="relative"
+        >
+          <div style={{ marginLeft: "50px" }}>
+            <Typography className={classes.text2}>Something-Topic</Typography>
+            <Typography /*className={}*/>Some Text</Typography>
+          </div>
+          <div style={{ marginLeft: "50px" }}>
+            <Typography className={classes.text2}>Something-Topic</Typography>
+            <Typography /*className={}*/>Some Text</Typography>
+          </div>
+        </Box>
+        <Box width="100%" height="10vh" style={{ background: "#121212" }} />
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          flexDirection="column"
+          width="100%"
+          height="50vh"
+          style={{ background: "#000000" }}
+        >
+          <Box
+            width="100%"
+            height="50%"
+            display="flex"
+            justifyContent="space-around"
+            alignItems="center"
+          >
+            {[1, 2, 3].map((i) => (
+              <Box key={i} height="100px">
+                <Typography className={classes.text2}>ABOUT</Typography>
+                <Typography>Contact Us</Typography>
+                <Typography>About Us</Typography>
+                <Typography>Careers</Typography>
+              </Box>
+            ))}
+          </Box>
+          <Typography className={classes.text2}>© Copyright</Typography>
         </Box>
       </div>
     </Paper>
