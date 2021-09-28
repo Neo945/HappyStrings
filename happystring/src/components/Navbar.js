@@ -7,7 +7,6 @@ import {
   Button,
   Box,
   InputBase,
-  IconButton,
   Paper,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
@@ -59,6 +58,7 @@ function Navbar(params) {
             alt=""
             style={{
               height: "30px",
+              width: "15px",
             }}
           />
         </Typography>
