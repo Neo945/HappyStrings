@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import isEmail from "validator/lib/isEmail";
-import isStrongPassword from "validator/lib/isStrongPassword";
+// import isStrongPassword from "validator/lib/isStrongPassword";
 import {
   Button,
   TextField,

@@ -1,6 +1,13 @@
 import "./App.css";
 // eslint-disable-next-line
-import { Login, Signup, Navbar, HomePage, Checkout } from "./components";
+import {
+  Login,
+  Signup,
+  Navbar,
+  HomePage,
+  Checkout,
+  Payment,
+} from "./components";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 
@@ -31,6 +38,9 @@ function App() {
           </Route>
           <Route path="/checkout">
             <Checkout />
+          </Route>
+          <Route path="/payment">
+            <Payment />
           </Route>
           <Route path="/">
             <HomePage />
