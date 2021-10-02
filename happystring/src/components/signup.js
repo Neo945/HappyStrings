@@ -15,6 +15,7 @@ import {
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import OauthButton from "./oauthButton";
 import { useState } from "react";
+import { lookup } from "./fetchData/lookup";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -150,14 +151,20 @@ function PasswordSignup(params) {
   const [pass, setPass] = useState("");
   const [cPass, setCPass] = useState("");
   const [error, setEror] = useState({ error: false, message: "" });
-  function formHandle(event) {
+  async function formHandle(event) {
     event.preventDefault();
     if (pass === cPass) {
-      params.fun(2);
       const state = { ...params.state };
       state.password = pass;
       state.password2 = cPass;
       params.update(state);
+      const response = await lookup("POST", "/api/register", params.state);
+      if (response[1] === 201) {
+        params.fun(2);
+      } else {
+        alert(response[0].message);
+        setEror({ error: true, message: "The passwords are not equal" });
+      }
     } else {
       setEror({ error: true, message: "The passwords are not equal" });
     }
@@ -254,7 +261,20 @@ function UserInfoSignup(params) {
     <>
       <form
         className={classes.form}
-        onSubmit={(event) => event.preventDefault()}
+        onSubmit={async (event) => {
+          const state = { ...params.state };
+          state.username = username;
+          state.age = age;
+          state.phone = phone;
+          params.update(state);
+          const response = await lookup("POST", "/api/create", params.state);
+          if (response[1] === 201) {
+            window.location.href = "/";
+          } else {
+            alert(response[0].message);
+          }
+          event.preventDefault();
+        }}
       >
         <TextField
           className={classes.textField}

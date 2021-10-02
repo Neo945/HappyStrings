@@ -14,8 +14,8 @@ module.exports = {
     },
     createUserForBaseUser: (req, res) => {
         errorHandler(req, res, async () => {
-            const newArtistAccount = await User.create({ ...req.body, user: req.user._id });
-            res.status(201).json({ message: 'success', user: newArtistAccount });
+            const newAccount = await User.create({ ...req.body, user: req.user._id });
+            res.status(201).json({ message: 'success', user: newAccount });
         });
     },
     registerUser: (req, res) => {
@@ -32,7 +32,11 @@ module.exports = {
                 res.cookie('jwt', token, {
                     maxAge: require('../config/config').TOKEN_LENGTH,
                 });
-                res.status(201).json({ mesage: 'login Successful', user: await User.findOne({ email }) });
+                const user = await BaseUser.findOne({ email });
+                res.status(201).json({
+                    mesage: 'login Successful',
+                    user: await User.findOne({ user: user._id }).populate('BaseUser', '-password'),
+                });
             } else {
                 res.clearCookie('jwt');
                 res.status(403).json({ mesage: 'Login unsuccessful' });
