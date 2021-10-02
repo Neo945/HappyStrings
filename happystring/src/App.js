@@ -8,6 +8,7 @@ import {
   Checkout,
   Payment,
   Cart,
+  CartV2,
 } from "./components";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
@@ -44,7 +45,7 @@ function App() {
             <Payment />
           </Route>
           <Route path="/cart">
-            <Cart />
+            <CartV2 />
           </Route>
           <Route path="/">
             <HomePage />
