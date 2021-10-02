@@ -12,6 +12,7 @@ import {
 } from "./components";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
+import BookModal from "./components/bookModal";
 
 function App() {
   makeStyles((theme) => ({
@@ -47,7 +48,9 @@ function App() {
           <Route path="/cart">
             <CartV2 />
           </Route>
-          <Route path="/test"></Route>
+          <Route path="/test">
+            <BookModal />
+          </Route>
           <Route path="/">
             <HomePage />
           </Route>
