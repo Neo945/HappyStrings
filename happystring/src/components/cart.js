@@ -16,6 +16,7 @@ import {
 import { styled } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
+import BookModal from "./bookModal";
 
 const cart = [
   {
@@ -113,8 +114,49 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function CartV2(props) {
+function CartBooks(props) {
   const classes = useStyle();
+  return (
+    <Grid item xs={3} md={3}>
+      <Item style={{ position: "relative", height: "400px" }}>
+        <div
+          onClick={props.handleOpen}
+          style={{
+            width: "100%",
+            height: "60%",
+            background: `url(${props.item.image}) no-repeat center center`,
+            backgroundSize: "cover",
+          }}
+        />
+        <Typography variant="h5" style={{ marginTop: "10px" }} align="left">
+          {props.item.name}
+        </Typography>
+        <Box position="absolute" bottom="10px" width="90%">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Box display="flex" alignItems="center">
+              <IconButton aria-label="add">
+                <AddIcon />
+              </IconButton>
+              <Typography>{0}</Typography>
+              <IconButton aria-label="add">
+                <RemoveIcon />
+              </IconButton>
+            </Box>
+            <Button className={classes.submit} variant="contained">
+              Remove
+            </Button>
+          </Box>
+        </Box>
+      </Item>
+    </Grid>
+  );
+}
+
+export default function CartV2(props) {
   return (
     <div>
       <Box height="70px" />
@@ -144,57 +186,12 @@ export default function CartV2(props) {
             }}
           >
             {cart.map((item, i) => (
-              <Grid item key={i} xs={3} md={3}>
-                <Item style={{ position: "relative", height: "400px" }}>
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "60%",
-                      background: `url(${item.image}) no-repeat center center`,
-                      backgroundSize: "cover",
-                    }}
-                  />
-                  <Typography
-                    variant="h5"
-                    style={{ marginTop: "10px" }}
-                    align="left"
-                  >
-                    {item.name}
-                  </Typography>
-                  <Box position="absolute" bottom="10px" width="90%">
-                    <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      alignItems="center"
-                    >
-                      <Box display="flex" alignItems="center">
-                        <IconButton aria-label="add">
-                          <AddIcon />
-                        </IconButton>
-                        <Typography>{0}</Typography>
-                        <IconButton aria-label="add">
-                          <RemoveIcon />
-                        </IconButton>
-                      </Box>
-                      <Button className={classes.submit} variant="contained">
-                        Remove
-                      </Button>
-                    </Box>
-                  </Box>
-                </Item>
-              </Grid>
+              <BookModal component={CartBooks} item={item} key={i} />
             ))}
           </Grid>
         </div>
         <div>
-          {/* <Box height="2.2em" /> */}
-          <Box
-            // height={`${window.innerHeight - 110}px`}
-            width="25vw"
-            display="flex"
-            // alignItems="center"
-            justifyContent="center"
-          >
+          <Box width="25vw" display="flex" justifyContent="center">
             <Paper style={{ width: "80%" }}>
               <Box
                 display="flex"

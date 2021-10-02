@@ -4,6 +4,7 @@ import BookModal from "./bookModal";
 import background from "./static/Background.png";
 import background2 from "./static/background2.png";
 import mobile from "./static/mobile.png";
+import book from "./static/book.jpg";
 
 const useStyle = makeStyles((theme) => ({
   "@global": {
@@ -45,8 +46,49 @@ const useStyle = makeStyles((theme) => ({
     fontSize: "1.55m",
     fontWeight: "bold",
   },
+  book: {
+    height: "360px",
+    width: "300px",
+    display: "inline-block",
+    margin: "10px",
+    backgroundColor: "transparent",
+    position: "relative",
+    background: `url(${book}) no-repeat center`,
+    backgroundSize: "contain",
+  },
+  bottomtxt: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: "120px",
+    background: "rgba(0, 0, 0, 0.5)",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
 }));
 
+const HomePageBook = (props) => {
+  const classes = useStyle();
+  return (
+    <Paper className={classes.book} onClick={props.handleOpen}>
+      <Paper className={classes.bottomtxt}>
+        <Typography
+          style={{
+            width: "50%",
+            height: "100%",
+            whiteSpace: "pre-wrap",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          How to win friends and Influence people
+        </Typography>
+        <Typography style={{ width: "20%" }}>₹169.95</Typography>
+      </Paper>
+    </Paper>
+  );
+};
 export default function HomePage() {
   const classes = useStyle();
   return (
@@ -108,7 +150,7 @@ export default function HomePage() {
                 className="hs trending"
               >
                 {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-                  <BookModal key={i} />
+                  <BookModal key={i} component={HomePageBook} />
                 ))}
               </div>
             </Box>
