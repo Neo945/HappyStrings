@@ -1,4 +1,4 @@
-import { React } from "react";
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   AppBar,
@@ -12,6 +12,7 @@ import {
 import { Link } from "react-router-dom";
 import logo from "./static/Union.png";
 import SearchIcon from "@material-ui/icons/Search";
+import getSearch from "./test";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -31,11 +32,9 @@ const useStyles = makeStyles((theme) => {
       padding: "0px 10px",
       backgroundColor: "#121212",
       height: "35px",
-      display: "flex",
-      alignItems: "center",
+      overflow: "hidden",
       borderRadius: "5px",
-      justifyContent: "space-between",
-      width: "25%",
+      width: "100%",
       marginRight: "50px",
     },
     textFeild: {
@@ -44,11 +43,19 @@ const useStyles = makeStyles((theme) => {
       },
       color: "#ffffff",
     },
+    img: {
+      width: "60px",
+      height: "30px",
+      background: `url("https://picsum.photos/200/300") no-repeat center center`,
+      backgroundSize: "cover",
+    },
   };
 });
 
 function Navbar(params) {
   const classes = useStyles();
+  const [search, setSearch] = useState([]);
+  const [searchText, setSearchText] = useState("");
   return (
     <AppBar position="fixed" className={classes.navbar}>
       <Toolbar>
@@ -62,27 +69,56 @@ function Navbar(params) {
             }}
           />
         </Typography>
-        <Paper
-          component="form"
-          className={classes.textFeildPaper}
-          sx={{
-            p: "2px 4px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="Search"
-            inputProps={{
-              "aria-label": "Search",
-              className: classes.textFeild,
+        <Box width="25%" height="35px">
+          <Paper
+            onSubmit={(e) => {
+              e.preventDefault();
             }}
-          />
-          {/* <IconButton type="submit" sx={{ p: "10px" }} aria-label="search"> */}
-          <SearchIcon style={{ fill: "#313131" }} />
-          {/* </IconButton> */}
-        </Paper>
+            component="form"
+            className={classes.textFeildPaper}
+            sx={{
+              p: "2px 4px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              height="35px"
+            >
+              <InputBase
+                sx={{ ml: 1, flex: 1 }}
+                placeholder="Search"
+                value={searchText}
+                inputProps={{
+                  "aria-label": "Search",
+                  className: classes.textFeild,
+                }}
+                onChange={(e) => {
+                  setSearchText(e.target.value);
+                  setSearch(
+                    getSearch(e.target.value, classes.img, setSearchText),
+                  );
+                }}
+                onFocus={(e) => {
+                  e.preventDefault();
+                  e.target.parentNode.parentNode.parentNode.style.height =
+                    "fit-content";
+                }}
+                onBlur={(e) => {
+                  e.preventDefault();
+                  e.target.parentNode.parentNode.parentNode.style.height =
+                    "35px";
+                  setSearch([]);
+                }}
+              />
+              <SearchIcon style={{ fill: "#313131" }} />
+            </Box>
+            <div>{search}</div>
+          </Paper>
+        </Box>
 
         <Box
           width="40%"

@@ -7,7 +7,7 @@ import {
   HomePage,
   Checkout,
   Payment,
-  Cart,
+  // Cart,
   CartV2,
 } from "./components";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -47,6 +47,7 @@ function App() {
           <Route path="/cart">
             <CartV2 />
           </Route>
+          <Route path="/test"></Route>
           <Route path="/">
             <HomePage />
           </Route>
