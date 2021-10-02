@@ -12,7 +12,7 @@ import {
 import { Link } from "react-router-dom";
 import logo from "./static/Union.png";
 import SearchIcon from "@material-ui/icons/Search";
-import getSearch from "./test";
+import getSearch from "./getSearch";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -44,8 +44,8 @@ const useStyles = makeStyles((theme) => {
       color: "#ffffff",
     },
     img: {
-      width: "60px",
-      height: "30px",
+      width: "40px",
+      height: "60px",
       background: `url("https://picsum.photos/200/300") no-repeat center center`,
       backgroundSize: "cover",
     },

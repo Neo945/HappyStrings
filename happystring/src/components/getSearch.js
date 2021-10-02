@@ -31,6 +31,8 @@ function getSearch(str, cls, fun) {
         <Box
           key={i.id}
           display="flex"
+          alignItems="center"
+          margin="10px"
           onClick={(e) => {
             e.preventDefault();
             fun(i.title);
@@ -38,7 +40,7 @@ function getSearch(str, cls, fun) {
         >
           <div className={cls} />
           <Typography
-            style={{ margin: "5px" }}
+            style={{ margin: "10px" }}
           >{`${i.title} by ${i.aurthor}`}</Typography>
         </Box>,
       );
