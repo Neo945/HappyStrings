@@ -10,9 +10,15 @@ import {
   // Cart,
   CartV2,
 } from "./components";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import BookModal from "./components/bookModal";
+import { useState, useEffect } from "react";
 
 function App() {
   makeStyles((theme) => ({
@@ -28,6 +34,30 @@ function App() {
       },
     },
   }))();
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  useEffect(() => {
+    if (user === null) {
+      fetch("/api/user/get", {
+        method: "GET",
+        credentials: "include",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.user) {
+            localStorage.setItem("user", JSON.stringify(data));
+            setUser(data);
+          } else {
+            localStorage.setItem("user", null);
+            setUser(null);
+          }
+        });
+    }
+  }, []);
   return (
     <div>
       <Router>
@@ -40,19 +70,19 @@ function App() {
             <Signup />
           </Route>
           <Route path="/checkout">
-            <Checkout />
+            {user ? <Checkout /> : <Redirect to="/login" />}
           </Route>
           <Route path="/payment">
-            <Payment />
+            {user ? <Payment /> : <Redirect to="/login" />}
           </Route>
           <Route path="/cart">
-            <CartV2 />
+            {user ? <CartV2 /> : <Redirect to="/login" />}
           </Route>
           <Route path="/test">
-            <BookModal />
+            {user ? <BookModal /> : <Redirect to="/login" />}
           </Route>
           <Route path="/">
-            <HomePage />
+            {user ? <HomePage /> : <Redirect to="/login" />}
           </Route>
         </Switch>
       </Router>

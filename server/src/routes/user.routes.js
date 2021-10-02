@@ -5,7 +5,7 @@ const passport = require('../config/passport.config');
 
 router.get('/get', view.getUser);
 router.post('/register', view.registerUser);
-router.post('/create', view.createUserForExistingUser);
+router.post('/create', view.createUserForBaseUser);
 router.post('/login', view.login);
 router.get('/logout', isa, view.logout);
 router.post('/email', view.sendEmailVerfication);

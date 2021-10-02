@@ -32,10 +32,10 @@ module.exports = {
                 res.cookie('jwt', token, {
                     maxAge: require('../config/config').TOKEN_LENGTH,
                 });
-                res.status(201).json({ mesage: 'login Successful' });
+                res.status(201).json({ mesage: 'login Successful', user: await User.findOne({ email }) });
             } else {
                 res.clearCookie('jwt');
-                res.json({ mesage: 'User not found' });
+                res.status(403).json({ mesage: 'Login unsuccessful' });
             }
         });
     },

@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import logo from "./static/Union.png";
 import SearchIcon from "@material-ui/icons/Search";
 import getSearch from "./getSearch";
+import { lookup } from "./fetchData/lookup";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -51,6 +52,22 @@ const useStyles = makeStyles((theme) => {
     },
   };
 });
+
+function Logout() {
+  return (
+    <Button
+      color="inherit"
+      onClick={async (e) => {
+        if ((await lookup("GET", "/auth/logout", null))[1] === 200) {
+          localStorage.setItem("user", null);
+          window.location.href = "/";
+        }
+      }}
+    >
+      LOGOUT
+    </Button>
+  );
+}
 
 function Navbar(params) {
   const classes = useStyles();
@@ -156,6 +173,7 @@ function Navbar(params) {
                 : "Logout"}
             </Button>
           </Link>
+          <Logout />
         </Box>
       </Toolbar>
     </AppBar>

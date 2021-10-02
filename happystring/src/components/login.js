@@ -12,7 +12,7 @@ import {
   Box,
 } from "@material-ui/core";
 import OauthButton from "./oauthButton";
-// import { lookup } from "./fetchData/lookup";
+import { lookup } from "./fetchData/lookup";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -82,13 +82,22 @@ export default function Login() {
         <OauthButton />
         <form
           className={classes.form}
-          onSubmit={(event) => {
+          onSubmit={async (event) => {
             event.preventDefault();
             if (form.email && form.password) {
               if (!isEmail(form.email)) {
                 setError({ ...error, email: true });
+                return;
               }
-              // lookup(form);
+              const response = await lookup("POST", "/auth/login", form);
+              if (response[1] === 201) {
+                localStorage.setItem("user", JSON.stringify(response[0].user));
+                window.location.href = "/";
+              } else {
+                localStorage.setItem("user", null);
+                setError({ email: true, password: true });
+                alert(response[0].message);
+              }
             } else {
               if (!form.email) {
                 setError({ ...error, email: true });

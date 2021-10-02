@@ -8,7 +8,7 @@ export async function lookup(method, data, endpoint) {
         "Content-type": "application/json; charset=UTF-8",
       },
     });
-    return await response.json();
+    return [await response.json(), response.status];
     // return response
   }
   const response = await fetch(`http://localhost:5000/api${endpoint}`, {
@@ -20,5 +20,5 @@ export async function lookup(method, data, endpoint) {
       "Content-type": "application/json; charset=UTF-8",
     },
   });
-  return await response.json();
+  return [await response.json(), response.status];
 }
