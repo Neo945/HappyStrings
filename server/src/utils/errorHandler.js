@@ -1,22 +1,20 @@
 module.exports = {
-    errorHandler: async function (req, res, cb) {
+    errorHandler: async (req, res, callback) => {
         try {
-            await cb();
-        } catch (err) {
-            // console.log(err.message);
-            const data = Object.values(err.errors);
-            const error = [];
-            data.forEach((ele) => {
-                error.push(ele.message);
-            });
-            res.status(403).json({ message: error });
-        }
-    },
-    errorOHandler: async function (cb) {
-        try {
-            await cb();
-        } catch (err) {
-            console.log({ message: err.message });
+            await callback();
+        } catch (error) {
+            try {
+                console.log(error);
+                const data = Object.values(error.errors);
+                const error1 = [];
+                data.forEach((ele) => {
+                    error1.push(ele.message);
+                });
+                res.status(403).json({ message: error1 });
+            } catch (err) {
+                console.log(err);
+                res.status(500).json({ message: `Something went wrong: ${error.message}` });
+            }
         }
     },
 };

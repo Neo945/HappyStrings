@@ -5,6 +5,8 @@ import background from "./static/Background.png";
 import background2 from "./static/background2.png";
 import mobile from "./static/mobile.png";
 import book from "./static/book.jpg";
+import { useEffect, useState } from "react";
+import lookup from "./fetchData/lookup";
 
 const useStyle = makeStyles((theme) => ({
   "@global": {
@@ -82,15 +84,35 @@ const HomePageBook = (props) => {
             alignItems: "center",
           }}
         >
-          How to win friends and Influence people
+          {props.item.title}
         </Typography>
-        <Typography style={{ width: "20%" }}>₹169.95</Typography>
+        <Typography
+          style={{ width: "20%" }}
+        >{`₹${props.item.price}`}</Typography>
       </Paper>
     </Paper>
   );
 };
+const ModalPage = (props) => {
+  return (
+    <>
+      <Typography id="transition-modal-title" variant="h6" component="h2">
+        {props.item.title}
+      </Typography>
+      <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+        {`₹${props.item.price}`}
+      </Typography>
+    </>
+  );
+};
 export default function HomePage() {
   const classes = useStyle();
+  const [book1, setBook1] = useState([]);
+  const [book2, setBook2] = useState([]);
+  useEffect(() => {
+    setBook1(lookup("GET", "/book/top", null));
+    setBook2(lookup("GET", "/book/top", null));
+  }, []);
   return (
     <Paper className="homepage" width="100%">
       <div className="homepage" style={{ width: "100vw", height: "375vh" }}>
@@ -133,13 +155,16 @@ export default function HomePage() {
             background: `#111111`,
           }}
         >
-          {["Trending", "New Books"].map((text, index) => (
+          {[
+            ["Trending", book1],
+            ["New Books", book2],
+          ].map((ele, index) => (
             <Box
               maxWidth="sm"
               key={index}
               style={{ marginRight: "5%", marginLeft: "5%" }}
             >
-              <Typography className={classes.text2}>{text}</Typography>
+              <Typography className={classes.text2}>{ele[0]}</Typography>
               <div
                 style={{
                   height: "400px",
@@ -149,8 +174,13 @@ export default function HomePage() {
                 }}
                 className="hs trending"
               >
-                {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-                  <BookModal key={i} component={HomePageBook} />
+                {ele[1].map((book, i) => (
+                  <BookModal
+                    key={i}
+                    modalBody={ModalPage}
+                    component={HomePageBook}
+                    item={book}
+                  />
                 ))}
               </div>
             </Box>
