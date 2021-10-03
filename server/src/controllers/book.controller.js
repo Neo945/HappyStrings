@@ -5,6 +5,17 @@ const { errorHandler } = require('../utils/errorHandler');
 
 module.exports = {
     // Get all the books
+    getTopBooks: async (req, res) => {
+        errorHandler(
+            req,
+            res,
+            async () => {
+                const books = await Book.aggregate([{ $sample: { size: 10 } }]);
+                res.json(books);
+            },
+            500
+        );
+    },
     getAllBooks: async (req, res) => {
         errorHandler(
             req,
@@ -76,7 +87,7 @@ module.exports = {
                         { aurthor: { $regex: req.query.search, $options: 'i' } },
                         { category: { $regex: req.query.search, $options: 'i' } },
                     ],
-                });
+                }).limit(10 * req.params.page);
                 res.status(200).json({ books });
             },
             500

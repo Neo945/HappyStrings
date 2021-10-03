@@ -114,6 +114,19 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+function BookModalBody() {
+  return (
+    <>
+      <Typography id="transition-modal-title" variant="h6" component="h2">
+        Text in a modal
+      </Typography>
+      <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+      </Typography>
+    </>
+  );
+}
+
 function CartBooks(props) {
   const classes = useStyle();
   return (
@@ -186,7 +199,12 @@ export default function CartV2(props) {
             }}
           >
             {cart.map((item, i) => (
-              <BookModal component={CartBooks} item={item} key={i} />
+              <BookModal
+                component={CartBooks}
+                modalBody={BookModalBody}
+                item={item}
+                key={i}
+              />
             ))}
           </Grid>
         </div>

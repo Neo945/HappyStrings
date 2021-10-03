@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Typography, Fade, Modal, Box, Backdrop } from "@material-ui/core";
+import { Fade, Modal, Box, Backdrop } from "@material-ui/core";
 
 const style = {
   position: "absolute",
@@ -34,12 +34,7 @@ export default function BookModal(props) {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <Typography id="transition-modal-title" variant="h6" component="h2">
-              Text in a modal
-            </Typography>
-            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography>
+            <props.modalBody item={props.item} />
           </Box>
         </Fade>
       </Modal>
