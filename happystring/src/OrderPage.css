@@ -1,0 +1,12 @@
+.book-img {
+  padding-left: 4vw;
+  border-radius: 5px;
+}
+
+.book-img,
+.book-price,
+.book-name,
+.status {
+    text-align: center;
+  height: 20vh;
+}

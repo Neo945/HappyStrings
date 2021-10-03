@@ -17,8 +17,8 @@ import {
   Redirect,
 } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
-import BookModal from "./components/bookModal";
 import { useState, useEffect } from "react";
+import OrderPage from "./OrderPage";
 
 function App() {
   makeStyles((theme) => ({
@@ -79,7 +79,7 @@ function App() {
             {user ? <CartV2 /> : <Redirect to="/login" />}
           </Route>
           <Route path="/test">
-            {user ? <BookModal /> : <Redirect to="/login" />}
+            <OrderPage/>
           </Route>
           <Route path="/">
             {user ? <HomePage /> : <Redirect to="/login" />}
