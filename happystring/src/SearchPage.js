@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Box,
   Button,
@@ -12,12 +13,22 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  MuiThemeProvider,
 } from "@material-ui/core";
 import { styled } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import BookModal from "./components/bookModal";
-import FilterAltIcon from "@material-ui/icons/FilterAlt";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import Link from "@material-ui/core/Link";
+import Slider from "@material-ui/core/Slider";
+// import FilterAltIcon from "@material-ui/icons/FilterAlt";
+
+function valuetext(value) {
+  return `${value}`;
+}
 
 const cart = [
   {
@@ -158,6 +169,11 @@ function CartBooks(props) {
 }
 
 export default function SearchPage(props) {
+  const [value, setValue] = React.useState([100, 1000]);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   return (
     <div>
       <Box height="70px" />
@@ -171,12 +187,63 @@ export default function SearchPage(props) {
       </Typography>
       <Box
         display="flex"
-        justifyContent="space-between"
+        justifyContent="center"
         style={{
           height: `${window.innerHeight - 70}px`,
           overflowY: "scroll",
         }}
       >
+        <Box width="25vw" height="135vh" display="flex" justifyContent="center">
+          <Paper style={{ width: "80%" }}>
+            <p style={{ marginLeft: "15px" }}>Filters</p>
+
+            <hr />
+
+            <Typography style={{ marginLeft: "7px" }}>Categories</Typography>
+            <FormGroup style={{ marginLeft: "10px" }}>
+              <FormControlLabel control={<Checkbox />} label="Fiction" />
+
+              <FormControlLabel control={<Checkbox />} label="Non-fiction" />
+
+              <FormControlLabel control={<Checkbox />} label="Children" />
+
+              <FormControlLabel control={<Checkbox />} label="Fantasy" />
+
+              <FormControlLabel control={<Checkbox />} label="Others" />
+            </FormGroup>
+
+            <hr />
+
+            <Typography style={{ marginLeft: "7px" }}>Languages</Typography>
+            <FormGroup style={{ marginLeft: "10px" }}>
+              <FormControlLabel control={<Checkbox />} label="English" />
+
+              <FormControlLabel control={<Checkbox />} label="Hindi" />
+
+              <FormControlLabel control={<Checkbox />} label="Marathi" />
+
+              <FormControlLabel control={<Checkbox />} label="Gujarati" />
+
+              <FormControlLabel control={<Checkbox />} label="Sanskrit" />
+            </FormGroup>
+
+            <hr />
+
+            <Typography style={{ marginLeft: "7px" }}>Price</Typography>
+            <Box sx={{ width: 250 }}>
+              <Slider
+                style={{ marginLeft: "10px", color: "#9A9A9A" }}
+                getAriaLabel={() => "Price range"}
+                value={value}
+                min={100}
+                max={5000}
+                onChange={handleChange}
+                valueLabelDisplay="auto"
+                getAriaValueText={valuetext}
+              />
+            </Box>
+          </Paper>
+        </Box>
         <div>
           <Grid
             container
@@ -191,84 +258,7 @@ export default function SearchPage(props) {
             ))}
           </Grid>
         </div>
-
-        <div>
-          {/* <Box width="25vw" display="flex" justifyContent="center">
-              <Paper style={{ width: "80%" }}>
-                <Box
-                  display="flex"
-                  justifyContent="center"
-                  flexDirection="column"
-                  width="100%"
-                  height="100%"
-                >
-                  <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell align="left">PRICE DETAILS</TableCell>
-                          <TableCell align="left"></TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {[
-                          {
-                            rowName: `Price (${cart.length} items)`,
-                            value: `₹91,989`,
-                          },
-                          {
-                            rowName: `Discounts`,
-                            value: `- ₹700`,
-                          },
-                          {
-                            rowName: `Delivery Charges`,
-                            value: `FREE`,
-                          },
-                          {
-                            rowName: `Total Amount`,
-                            value: `₹91,989`,
-                            component: "h4",
-                          },
-                        ].map((row, i) => (
-                          <TableRow
-                            key={i}
-                            sx={{
-                              "&:last-child td, &:last-child th": { border: 0 },
-                            }}
-                          >
-                            <TableCell component="th" scope="row">
-                              <Box
-                                component={row.component ? row.component : "div"}
-                              >
-                                {row.rowName}
-                              </Box>
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              <Box
-                                component={row.component ? row.component : "div"}
-                              >
-                                {row.value}
-                              </Box>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                  <Typography style={{ margin: "10px" }}>
-                    You will save ₹700 on this order
-                  </Typography>
-                </Box>
-              </Paper>
-            </Box> */}
-
-          <Box width="25vw" display="flex" justifyContent="center">
-            <Paper style={{ width: "80%" }}>
-              <p style={{ marginLeft: "15px" }}>Filters</p>
-              starticon = <FilterAltIcon />
-            </Paper>
-          </Box>
-        </div>
+        
       </Box>
     </div>
   );

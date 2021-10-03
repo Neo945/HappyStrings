@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import logo from "./static/Union.png";
 import SearchIcon from "@material-ui/icons/Search";
 import getSearch from "./getSearch";
-import { lookup } from "./fetchData/lookup";
+import lookup from "./fetchData/lookup";
 
 const useStyles = makeStyles((theme) => {
   return {

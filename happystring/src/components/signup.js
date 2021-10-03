@@ -15,7 +15,7 @@ import {
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import OauthButton from "./oauthButton";
 import { useState } from "react";
-import { lookup } from "./fetchData/lookup";
+import lookup from "./fetchData/lookup";
 
 const useStyles = makeStyles((theme) => {
   return {

@@ -12,7 +12,7 @@ import {
   Box,
 } from "@material-ui/core";
 import OauthButton from "./oauthButton";
-import { lookup } from "./fetchData/lookup";
+import lookup from "./fetchData/lookup";
 
 const useStyles = makeStyles((theme) => {
   return {
