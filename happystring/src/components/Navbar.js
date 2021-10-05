@@ -136,7 +136,6 @@ function Navbar(params) {
             <div>{search}</div>
           </Paper>
         </Box>
-
         <Box
           width="40%"
           display="flex"

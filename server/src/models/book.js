@@ -21,7 +21,26 @@ const BookSchema = new Schema(
             type: String,
             required: true,
             enum: {
-                values: ['Fiction', 'Non-Fiction', 'Children', 'Others', 'Fantasy'],
+                values: [
+                    'Fiction',
+                    'Non-Fiction',
+                    'Children',
+                    'Others',
+                    'Fantasy',
+                    'Mystery',
+                    'Thriller',
+                    'Self-Help',
+                    'Science',
+                    'Education',
+                ],
+                message: '{VALUE} is not the correct type',
+            },
+        },
+        language: {
+            type: String,
+            required: true,
+            enum: {
+                values: ['English', 'Hindi', 'Marathi', 'Gujarati', 'Sanskrit', 'Other'],
                 message: '{VALUE} is not the correct type',
             },
         },
