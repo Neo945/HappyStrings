@@ -104,7 +104,7 @@ module.exports = {
                     author: author.id ? author.id : (await Aurthor.create({ ...author }))._id,
                     shop: shop.id ? shop.id : (await Shop.create({ ...shop }))._id,
                 });
-                res.status(201).json(newBook);
+                res.status(201).json({ book: await newBook.populate('Author').populate('Shop') });
             },
             500
         );
