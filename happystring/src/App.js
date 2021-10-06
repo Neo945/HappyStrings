@@ -7,8 +7,10 @@ import {
   HomePage,
   Checkout,
   Payment,
+  OrderPage,
   // Cart,
   CartV2,
+  SearchPage,
 } from "./components";
 import {
   BrowserRouter as Router,
@@ -18,8 +20,6 @@ import {
 } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import { useState, useEffect } from "react";
-import OrderPage from "./OrderPage";
-import SearchPage from "./SearchPage"
 
 function App() {
   makeStyles((theme) => ({
@@ -36,29 +36,30 @@ function App() {
     },
   }))();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
-  // useEffect(() => {
-  //   if (user === null) {
-  //     fetch("/api/user/get", {
-  //       method: "GET",
-  //       credentials: "include",
-  //       mode: "cors",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "Access-Control-Allow-Origin": "*",
-  //       },
-  //     })
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         if (data.user) {
-  //           localStorage.setItem("user", JSON.stringify(data));
-  //           setUser(data);
-  //         } else {
-  //           localStorage.setItem("user", null);
-  //           setUser(null);
-  //         }
-  //       });
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (user === null) {
+      fetch("/api/user/get", {
+        method: "GET",
+        credentials: "include",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.user) {
+            localStorage.setItem("user", JSON.stringify(data));
+            setUser(data);
+          } else {
+            localStorage.setItem("user", null);
+            setUser(null);
+          }
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div>
       <Router>
@@ -80,7 +81,10 @@ function App() {
             {user ? <CartV2 /> : <Redirect to="/login" />}
           </Route>
           <Route path="/test">
-            <SearchPage/>
+            <SearchPage />
+          </Route>
+          <Route path="/test2">
+            <OrderPage />
           </Route>
           <Route path="/">
             {user ? <HomePage /> : <Redirect to="/login" />}

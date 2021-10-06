@@ -11,7 +11,7 @@ import {
 import { styled } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
-import BookModal from "./components/bookModal";
+import BookModal from "./bookModal";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
@@ -177,15 +177,8 @@ export default function SearchPage(props) {
       >
         Cart
       </Typography>
-      <Box
-        display="flex"
-        justifyContent="center"
-        style={{
-          height: `${window.innerHeight - 70}px`,
-          overflowY: "scroll",
-        }}
-      >
-        <Box width="25vw" height="135vh" display="flex" justifyContent="center">
+      <Box display="flex" justifyContent="center">
+        <Box width="25vw" display="flex" justifyContent="center">
           <Paper style={{ width: "80%" }}>
             <p style={{ marginLeft: "15px" }}>Filters</p>
 
@@ -236,21 +229,46 @@ export default function SearchPage(props) {
             </Box>
           </Paper>
         </Box>
-        <div>
+        <div
+          style={{
+            height: `${window.innerHeight - 170}px`,
+            width: "75%",
+            overflowY: "scroll",
+          }}
+        >
           <Grid
             container
             spacing={2}
             style={{
-              marginLeft: "5%",
               width: "70vw",
             }}
           >
             {cart.map((item, i) => (
-              <BookModal component={CartBooks} item={item} key={i} />
+              <BookModal
+                modalBody={(props) => {
+                  return (
+                    <>
+                      <Typography
+                        id="transition-modal-title"
+                        variant="h6"
+                        component="h2"
+                      >
+                        {"props.item.title"}
+                      </Typography>
+                      <Typography
+                        id="transition-modal-description"
+                        sx={{ mt: 2 }}
+                      ></Typography>
+                    </>
+                  );
+                }}
+                component={CartBooks}
+                item={item}
+                key={i}
+              />
             ))}
           </Grid>
         </div>
-        
       </Box>
     </div>
   );
