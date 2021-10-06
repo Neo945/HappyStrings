@@ -80,10 +80,10 @@ function App() {
           <Route path="/cart">
             {user ? <CartV2 /> : <Redirect to="/login" />}
           </Route>
-          <Route path="/test">
+          <Route path="/search">
             <SearchPage />
           </Route>
-          <Route path="/test2">
+          <Route path="/order">
             <OrderPage />
           </Route>
           <Route path="/">

@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -16,7 +16,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import Slider from "@material-ui/core/Slider";
-// import FilterAltIcon from "@material-ui/icons/FilterAlt";
 
 function valuetext(value) {
   return `${value}`;
@@ -160,11 +159,37 @@ function CartBooks(props) {
   );
 }
 
+function filterValue(books, language, cat, value, setBooks) {
+  let filteredBooks = books.filter((book) => {
+    return language.includes(book.language);
+  });
+  if (filteredBooks.length === 0) {
+    filteredBooks = books;
+  }
+  filteredBooks = filteredBooks.filter((book) => {
+    return cat.includes(book.category);
+  });
+  if (filteredBooks.length === 0) {
+    filteredBooks = books;
+  }
+  filteredBooks = filteredBooks.filter((book) => {
+    return value[0] <= book.price < value[1];
+  });
+  if (filteredBooks.length === 0) {
+    filteredBooks = books;
+  }
+  setBooks(filteredBooks);
+}
+
 export default function SearchPage(props) {
-  const [value, setValue] = React.useState([100, 1000]);
+  const [value, setValue] = useState([100, 1000]);
+  const [language, setLanguage] = useState([]);
+  const [books, setBooks] = useState(cart);
+  const [cat, setCat] = useState([]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    filterValue(books, language, cat, value, setBooks);
   };
   return (
     <div>
@@ -186,30 +211,51 @@ export default function SearchPage(props) {
 
             <Typography style={{ marginLeft: "7px" }}>Categories</Typography>
             <FormGroup style={{ marginLeft: "10px" }}>
-              <FormControlLabel control={<Checkbox />} label="Fiction" />
-
-              <FormControlLabel control={<Checkbox />} label="Non-fiction" />
-
-              <FormControlLabel control={<Checkbox />} label="Children" />
-
-              <FormControlLabel control={<Checkbox />} label="Fantasy" />
-
-              <FormControlLabel control={<Checkbox />} label="Others" />
+              {["Fiction", "Non-fiction", "Children", "Fantasy", "Others"].map(
+                (item, i) => (
+                  <FormControlLabel
+                    control={<Checkbox />}
+                    label={item}
+                    key={i}
+                    onChange={() => {
+                      if (cat.includes(item)) {
+                        setCat(cat.filter((cat) => cat !== item));
+                      } else {
+                        setCat([...cat, item]);
+                      }
+                      filterValue(books, language, cat, value, setBooks);
+                    }}
+                  />
+                ),
+              )}
             </FormGroup>
 
             <hr />
 
             <Typography style={{ marginLeft: "7px" }}>Languages</Typography>
             <FormGroup style={{ marginLeft: "10px" }}>
-              <FormControlLabel control={<Checkbox />} label="English" />
-
-              <FormControlLabel control={<Checkbox />} label="Hindi" />
-
-              <FormControlLabel control={<Checkbox />} label="Marathi" />
-
-              <FormControlLabel control={<Checkbox />} label="Gujarati" />
-
-              <FormControlLabel control={<Checkbox />} label="Sanskrit" />
+              {[
+                "English",
+                "Hindi",
+                "Marathi",
+                "Gujarati",
+                "Sanskrit",
+                "Others",
+              ].map((item, i) => (
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label={item}
+                  key={i}
+                  onChange={() => {
+                    if (language.includes(item)) {
+                      setLanguage(language.filter((lang) => lang !== item));
+                    } else {
+                      setLanguage([...language, item]);
+                    }
+                    filterValue(books, language, cat, value, setBooks);
+                  }}
+                />
+              ))}
             </FormGroup>
 
             <hr />
@@ -243,7 +289,7 @@ export default function SearchPage(props) {
               width: "70vw",
             }}
           >
-            {cart.map((item, i) => (
+            {books.map((item, i) => (
               <BookModal
                 modalBody={(props) => {
                   return (
