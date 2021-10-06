@@ -58,7 +58,7 @@ function Logout() {
     <Button
       color="inherit"
       onClick={async (e) => {
-        if ((await lookup("GET", "/auth/logout", null))[1] === 200) {
+        if ((await lookup("GET", null, "/auth/logout"))[1] === 200) {
           localStorage.setItem("user", null);
           window.location.href = "/";
         }
@@ -143,36 +143,21 @@ function Navbar(params) {
           alignItems="center"
         >
           <Link to="/" style={{ textDecoration: "none", color: "white" }}>
-            <Button color="inherit">
-              {window.location.pathname === "/login"
-                ? "Support"
-                : window.location.pathname === "/signup" ||
-                  window.location.pathname === "/"
-                ? "Support"
-                : "Support"}
-            </Button>
+            <Button color="inherit">Support</Button>
           </Link>
-          <Link to="/" style={{ textDecoration: "none", color: "white" }}>
-            <Button color="inherit">
-              {window.location.pathname === "/login"
-                ? "Sign up"
-                : window.location.pathname === "/signup" ||
-                  window.location.pathname === "/"
-                ? "Sign up"
-                : "Sign up"}
-            </Button>
-          </Link>
-          <Link to="/" style={{ textDecoration: "none", color: "white" }}>
-            <Button color="inherit">
-              {window.location.pathname === "/login"
-                ? "Register"
-                : window.location.pathname === "/signup" ||
-                  window.location.pathname === "/"
-                ? "Login"
-                : "Logout"}
-            </Button>
-          </Link>
-          <Logout />
+          {JSON.parse(localStorage.getItem("user")) === null ? (
+            <Link to="/" style={{ textDecoration: "none", color: "white" }}>
+              <Button color="inherit">Signup</Button>
+            </Link>
+          ) : null}
+          {JSON.parse(localStorage.getItem("user")) === null ? (
+            <Link to="/" style={{ textDecoration: "none", color: "white" }}>
+              <Button color="inherit">Login</Button>
+            </Link>
+          ) : null}
+          {JSON.parse(localStorage.getItem("user")) !== null ? (
+            <Logout />
+          ) : null}
         </Box>
       </Toolbar>
     </AppBar>

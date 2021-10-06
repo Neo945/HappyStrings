@@ -14,7 +14,10 @@ module.exports = {
     },
     createUserForBaseUser: (req, res) => {
         errorHandler(req, res, async () => {
-            const newAccount = await User.create({ ...req.body, user: req.user._id });
+            const newAccount = await User.create({
+                ...req.body,
+                user: (await BaseUser.findOne({ email: req.body.email }))._id,
+            });
             res.status(201).json({ message: 'success', user: newAccount });
         });
     },
@@ -30,7 +33,7 @@ module.exports = {
             const token = await BaseUser.login(email, password);
             if (token) {
                 res.cookie('jwt', token, {
-                    maxAge: require('../config/config').TOKEN_LENGTH,
+                    maxAge: 259200000,
                 });
                 const user = await BaseUser.findOne({ email });
                 res.status(201).json({

@@ -101,7 +101,7 @@ const UserSchema = new Schema({
         type: String,
         trim: true,
         unique: true,
-        minLength: 12,
+        minLength: 10,
         validate: [isMobilePhone, 'Invalid Phone number'],
     },
     age: {

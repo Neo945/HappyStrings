@@ -11,7 +11,7 @@ module.exports = {
             res,
             async () => {
                 const books = await Book.aggregate([{ $sample: { size: 10 } }]);
-                res.json(books);
+                res.status(200).json(books);
             },
             500
         );

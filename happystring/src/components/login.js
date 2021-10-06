@@ -17,14 +17,15 @@ import lookup from "./fetchData/lookup";
 const useStyles = makeStyles((theme) => {
   return {
     paper: {
-      marginTop: theme.spacing(5),
+      marginTop: theme.spacing(2),
       display: "flex",
       padding: theme.spacing(5),
       backgroundColor: "#1E1E1E",
       borderRadius: "37px",
       flexDirection: "column",
       alignItems: "center",
-      height: "70vh",
+      // height: "70vh",
+      height: "fit-content",
     },
     form: {
       width: "512px",
@@ -70,7 +71,9 @@ export default function Login() {
       display="flex"
       alignItems="center"
       justifyContent="center"
+      flexDirection="column"
     >
+      <Box height="7vh" />
       <div className={classes.paper}>
         <Typography
           component="h1"
@@ -89,7 +92,7 @@ export default function Login() {
                 setError({ ...error, email: true });
                 return;
               }
-              const response = await lookup("POST", "/auth/login", form);
+              const response = await lookup("POST", form, "/auth/login");
               if (response[1] === 201) {
                 localStorage.setItem("user", JSON.stringify(response[0].user));
                 window.location.href = "/";

@@ -7,7 +7,7 @@ router.get('/:id', view.getBook);
 router.get('/ava', view.getAvailableBook);
 router.get('/author', view.getAurthorBooks);
 router.get('/cat', view.getCategoryBooks);
-router.get('/search', view.searchBooks);
+router.get('/search', view.getSearchBooks);
 router.post('/create/:page', view.createBook);
 
 module.exports = router;

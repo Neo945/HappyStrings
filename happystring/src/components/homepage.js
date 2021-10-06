@@ -110,8 +110,12 @@ export default function HomePage() {
   const [book1, setBook1] = useState([]);
   const [book2, setBook2] = useState([]);
   useEffect(() => {
-    setBook1(lookup("GET", "/book/top", null));
-    setBook2(lookup("GET", "/book/top", null));
+    lookup("GET", null, "/book/top").then((data) => {
+      setBook1(data[0]);
+    });
+    lookup("GET", null, "/book/top").then((data) => {
+      setBook2(data[0]);
+    });
   }, []);
   return (
     <Paper className="homepage" width="100%">
@@ -131,9 +135,11 @@ export default function HomePage() {
             <Typography className={classes.text}>
               Buy books anytime, anywhere free.
             </Typography>
-            <Button variant="contained" className={classes.button}>
-              LOGIN
-            </Button>
+            {JSON.parse(localStorage.getItem("user")) === null ? (
+              <Button variant="contained" className={classes.button}>
+                LOGIN
+              </Button>
+            ) : null}
           </Box>
           <div
             style={{

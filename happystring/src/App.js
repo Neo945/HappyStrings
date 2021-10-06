@@ -20,6 +20,7 @@ import {
 } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import { useState, useEffect } from "react";
+import lookup from "./components/fetchData/lookup";
 
 function App() {
   makeStyles((theme) => ({
@@ -38,15 +39,7 @@ function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   useEffect(() => {
     if (user === null) {
-      fetch("/api/user/get", {
-        method: "GET",
-        credentials: "include",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      })
+      lookup("GET", null, "/user/get")
         .then((res) => res.json())
         .then((data) => {
           if (data.user) {
@@ -87,7 +80,7 @@ function App() {
             <OrderPage />
           </Route>
           <Route path="/">
-            {user ? <HomePage /> : <Redirect to="/login" />}
+            <HomePage />
           </Route>
         </Switch>
       </Router>

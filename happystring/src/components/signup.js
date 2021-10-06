@@ -84,12 +84,14 @@ const useStyles = makeStyles((theme) => {
 
 function EmailInputSignup(params) {
   const classes = useStyles();
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   function formHandle(event) {
     event.preventDefault();
     if (isEmail(email)) {
       params.fun(1);
       const state = { ...params.state };
+      state.username = username;
       state.email = email;
       params.update(state);
     } else {
@@ -126,6 +128,26 @@ function EmailInputSignup(params) {
           autoComplete="email"
           className={classes.textField}
         />
+        <TextField
+          className={classes.textField}
+          id="username"
+          fullWidth
+          required
+          variant="outlined"
+          label="Userame"
+          value={
+            params.state.username === "" ? username : params.state.username
+          }
+          onChange={(event) => {
+            if (params.state.password !== "") {
+              const state = { ...params.state };
+              state.username = "";
+              params.update(state);
+            }
+            setUsername(event.target.value);
+          }}
+        />
+
         <Typography
           style={{ color: "gray", fontSize: "0.75em", margin: "5px" }}
         >
@@ -158,7 +180,7 @@ function PasswordSignup(params) {
       state.password = pass;
       state.password2 = cPass;
       params.update(state);
-      const response = await lookup("POST", "/api/register", params.state);
+      const response = await lookup("POST", state, "/auth/register");
       if (response[1] === 201) {
         params.fun(2);
       } else {
@@ -254,7 +276,6 @@ function PasswordSignup(params) {
 }
 function UserInfoSignup(params) {
   const classes = useStyles();
-  const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
   const [age, setAge] = useState(12);
   return (
@@ -262,12 +283,12 @@ function UserInfoSignup(params) {
       <form
         className={classes.form}
         onSubmit={async (event) => {
+          event.preventDefault();
           const state = { ...params.state };
-          state.username = username;
           state.age = age;
           state.phone = phone;
           params.update(state);
-          const response = await lookup("POST", "/api/create", params.state);
+          const response = await lookup("POST", state, "/auth/create");
           if (response[1] === 201) {
             window.location.href = "/";
           } else {
@@ -276,25 +297,6 @@ function UserInfoSignup(params) {
           event.preventDefault();
         }}
       >
-        <TextField
-          className={classes.textField}
-          id="username"
-          fullWidth
-          required
-          variant="outlined"
-          label="Userame"
-          value={
-            params.state.username === "" ? username : params.state.username
-          }
-          onChange={(event) => {
-            if (params.state.password !== "") {
-              const state = { ...params.state };
-              state.username = "";
-              params.update(state);
-            }
-            setUsername(event.target.value);
-          }}
-        />
         <TextField
           className={classes.textField}
           id="phone"
