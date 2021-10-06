@@ -87,7 +87,9 @@ module.exports = {
                         { aurthor: { $regex: req.query.search, $options: 'i' } },
                         { category: { $regex: req.query.search, $options: 'i' } },
                     ],
-                }).limit(10 * req.params.page);
+                })
+                    .limit(10 * parseInt(req.params.page, 10))
+                    .populate('Author');
                 res.status(200).json({ books });
             },
             500

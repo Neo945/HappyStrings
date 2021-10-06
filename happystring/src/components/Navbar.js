@@ -113,10 +113,15 @@ function Navbar(params) {
                   "aria-label": "Search",
                   className: classes.textFeild,
                 }}
-                onChange={(e) => {
+                onChange={async (e) => {
                   setSearchText(e.target.value);
                   setSearch(
-                    getSearch(e.target.value, classes.img, setSearchText),
+                    await getSearch(
+                      searchText,
+                      e.target.value,
+                      classes.img,
+                      setSearchText,
+                    ),
                   );
                 }}
                 onFocus={(e) => {
@@ -146,12 +151,18 @@ function Navbar(params) {
             <Button color="inherit">Support</Button>
           </Link>
           {JSON.parse(localStorage.getItem("user")) === null ? (
-            <Link to="/" style={{ textDecoration: "none", color: "white" }}>
+            <Link
+              to="/signup"
+              style={{ textDecoration: "none", color: "white" }}
+            >
               <Button color="inherit">Signup</Button>
             </Link>
           ) : null}
           {JSON.parse(localStorage.getItem("user")) === null ? (
-            <Link to="/" style={{ textDecoration: "none", color: "white" }}>
+            <Link
+              to="/login"
+              style={{ textDecoration: "none", color: "white" }}
+            >
               <Button color="inherit">Login</Button>
             </Link>
           ) : null}
