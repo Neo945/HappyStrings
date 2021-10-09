@@ -40,11 +40,10 @@ function App() {
   useEffect(() => {
     if (user === null) {
       lookup("GET", null, "/user/get")
-        .then((res) => res.json())
         .then((data) => {
-          if (data.user) {
-            localStorage.setItem("user", JSON.stringify(data));
-            setUser(data);
+          if (data[0].user) {
+            localStorage.setItem("user", JSON.stringify(data[0].user));
+            setUser(data[0].user);
           } else {
             localStorage.setItem("user", null);
             setUser(null);

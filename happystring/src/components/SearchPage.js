@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -8,6 +8,7 @@ import {
   Paper,
   Typography,
 } from "@material-ui/core";
+import lookup from "./fetchData/lookup";
 import { styled } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
@@ -20,79 +21,6 @@ import Slider from "@material-ui/core/Slider";
 function valuetext(value) {
   return `${value}`;
 }
-
-const cart = [
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 2,
-    name: "Product 2",
-    price: "10",
-    quantity: 2,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 3,
-    name: "Product 3",
-    price: "10",
-    quantity: 3,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 4,
-    name: "Product 4",
-    price: "10",
-    quantity: 4,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 5,
-    name: "Product 5",
-    price: "10",
-    quantity: 5,
-    image: "https://picsum.photos/200/300",
-  },
-];
 
 const useStyle = makeStyles((theme) => ({
   submit: {
@@ -127,12 +55,15 @@ function CartBooks(props) {
           style={{
             width: "100%",
             height: "60%",
-            background: `url(${props.item.image}) no-repeat center center`,
+            background: `url(${"https://picsum.photos/200/300"}) no-repeat center center`,
             backgroundSize: "cover",
           }}
         />
         <Typography variant="h5" style={{ marginTop: "10px" }} align="left">
-          {props.item.name}
+          {props.item.title}
+        </Typography>
+        <Typography variant="h6" style={{ marginTop: "10px" }} align="left">
+          {`₹${props.item.price}`}
         </Typography>
         <Box position="absolute" bottom="10px" width="90%">
           <Box
@@ -140,17 +71,8 @@ function CartBooks(props) {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Box display="flex" alignItems="center">
-              <IconButton aria-label="add">
-                <AddIcon />
-              </IconButton>
-              <Typography>{0}</Typography>
-              <IconButton aria-label="add">
-                <RemoveIcon />
-              </IconButton>
-            </Box>
             <Button className={classes.submit} variant="contained">
-              Remove
+              Add to Cart
             </Button>
           </Box>
         </Box>
@@ -184,12 +106,26 @@ function filterValue(books, language, cat, value, setBooks) {
 export default function SearchPage(props) {
   const [value, setValue] = useState([100, 1000]);
   const [language, setLanguage] = useState([]);
-  const [books, setBooks] = useState(cart);
+  const [books, setBooks] = useState([]);
   const [cat, setCat] = useState([]);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    lookup(
+      "GET",
+      null,
+      `/book/search/1?search=${url.searchParams
+        .get("str")
+        .split(" ")
+        .join("+")}`,
+    ).then((data) => {
+      setBooks(data[0].books);
+    });
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    filterValue(books, language, cat, value, setBooks);
+    filterValue(books, language, cat, newValue, setBooks);
   };
   return (
     <div>
@@ -220,10 +156,23 @@ export default function SearchPage(props) {
                     onChange={() => {
                       if (cat.includes(item)) {
                         setCat(cat.filter((cat) => cat !== item));
+                        filterValue(
+                          books,
+                          language,
+                          cat.filter((cat) => cat !== item),
+                          value,
+                          setBooks,
+                        );
                       } else {
                         setCat([...cat, item]);
+                        filterValue(
+                          books,
+                          language,
+                          [...cat, item],
+                          value,
+                          setBooks,
+                        );
                       }
-                      filterValue(books, language, cat, value, setBooks);
                     }}
                   />
                 ),
@@ -249,10 +198,23 @@ export default function SearchPage(props) {
                   onChange={() => {
                     if (language.includes(item)) {
                       setLanguage(language.filter((lang) => lang !== item));
+                      filterValue(
+                        books,
+                        language.filter((lang) => lang !== item),
+                        cat,
+                        value,
+                        setBooks,
+                      );
                     } else {
                       setLanguage([...language, item]);
+                      filterValue(
+                        books,
+                        [...language, item],
+                        cat,
+                        value,
+                        setBooks,
+                      );
                     }
-                    filterValue(books, language, cat, value, setBooks);
                   }}
                 />
               ))}
