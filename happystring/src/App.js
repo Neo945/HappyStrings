@@ -39,16 +39,15 @@ function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   useEffect(() => {
     if (user === null) {
-      lookup("GET", null, "/user/get")
-        .then((data) => {
-          if (data[0].user) {
-            localStorage.setItem("user", JSON.stringify(data[0].user));
-            setUser(data[0].user);
-          } else {
-            localStorage.setItem("user", null);
-            setUser(null);
-          }
-        });
+      lookup("GET", null, "/user/get").then((data) => {
+        if (data[0].user) {
+          localStorage.setItem("user", JSON.stringify(data[0].user));
+          setUser(data[0].user);
+        } else {
+          localStorage.setItem("user", null);
+          setUser(null);
+        }
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -70,7 +69,12 @@ function App() {
             {user ? <Payment /> : <Redirect to="/login" />}
           </Route>
           <Route path="/cart">
-            {user ? <CartV2 /> : <Redirect to="/login" />}
+            {user ? (
+              <CartV2 />
+            ) : (
+              //<Redirect to="/login" />
+              <CartV2 />
+            )}
           </Route>
           <Route path="/search">
             <SearchPage />

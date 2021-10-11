@@ -103,6 +103,7 @@ function filterValue(books, language, cat, value, setBooks) {
     filteredBooks = books;
   }
   filteredBooks = filteredBooks.filter((book) => {
+    // eslint-disable-next-line no-mixed-operators
     return value[0] <= book.price < value[1];
   });
   if (filteredBooks.length === 0) {

@@ -17,6 +17,8 @@ import { styled } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import BookModal from "./bookModal";
+import { useState, useEffect } from "react";
+import lookup from "./fetchData/lookup";
 
 const cart = [
   {
@@ -137,12 +139,12 @@ function CartBooks(props) {
           style={{
             width: "100%",
             height: "60%",
-            background: `url(${props.item.image}) no-repeat center center`,
+            background: `url(${props.item.book.image}) no-repeat center center`,
             backgroundSize: "cover",
           }}
         />
         <Typography variant="h5" style={{ marginTop: "10px" }} align="left">
-          {props.item.name}
+          {props.item.book.name}
         </Typography>
         <Box position="absolute" bottom="10px" width="90%">
           <Box
@@ -154,7 +156,7 @@ function CartBooks(props) {
               <IconButton aria-label="add">
                 <AddIcon />
               </IconButton>
-              <Typography>{0}</Typography>
+              <Typography>{props.item.quantity}</Typography>
               <IconButton aria-label="add">
                 <RemoveIcon />
               </IconButton>
@@ -169,7 +171,21 @@ function CartBooks(props) {
   );
 }
 
+function getPrice(cart) {
+  let price = 0;
+  cart.forEach((ele) => {
+    price += ele.book.price * ele.quantity;
+  });
+  return price;
+}
+
 export default function CartV2(props) {
+  const [cart, setCart] = useState([]);
+  useEffect(() => {
+    lookup("GET", null, "/auth/cart").then((res) => {
+      setCart(res[0].cart);
+    });
+  }, []);
   return (
     <div>
       <Box height="70px" />
@@ -230,7 +246,7 @@ export default function CartV2(props) {
                       {[
                         {
                           rowName: `Price (${cart.length} items)`,
-                          value: `₹91,989`,
+                          value: `₹${getPrice(cart)}`,
                         },
                         {
                           rowName: `Discounts`,
@@ -242,7 +258,7 @@ export default function CartV2(props) {
                         },
                         {
                           rowName: `Total Amount`,
-                          value: `₹91,989`,
+                          value: `₹${getPrice(cart) - 700}`,
                           component: "h4",
                         },
                       ].map((row, i) => (

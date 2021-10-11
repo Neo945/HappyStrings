@@ -111,7 +111,7 @@ const UserSchema = new Schema({
     cart: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'Book',
+            ref: 'Cart',
         },
     ],
     wishlist: [

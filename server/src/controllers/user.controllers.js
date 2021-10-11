@@ -130,8 +130,15 @@ module.exports = {
             req,
             res,
             async () => {
-                const user = await User.findOne({ user: req.user._id }).populate('Book', '-_id -__v -stock');
-                res.status(200).json({ message: 'success', cart: { ...user.cart } });
+                if (req.user !== null) {
+                    const user = await User.findOne({ user: req.user._id })
+                        .populate('Cart', '-_id')
+                        .populate('Book', '-_id -__v -stock');
+                    res.status(200).json({ message: 'success', cart: { ...user.cart } });
+                } else {
+                    const user = await User.findOne({}).populate('Cart', '-_id').populate('Book', '-_id -__v -stock');
+                    res.status(200).json({ message: 'success', cart: user.cart });
+                }
             },
             500
         );

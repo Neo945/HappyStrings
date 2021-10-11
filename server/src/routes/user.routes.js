@@ -18,5 +18,7 @@ router.get(
     })
 );
 router.get('/google/redirect', passport.authenticate('google'), view.googleOauthRedirect);
+router.get('/cart', view.getCart);
+router.post('/add/cart/:id', view.addToCart);
 
 module.exports = router;
