@@ -3,20 +3,17 @@ import {
   Box,
   Button,
   Grid,
-  IconButton,
   makeStyles,
   Paper,
+  Checkbox,
   Typography,
+  FormControlLabel,
+  Slider,
 } from "@material-ui/core";
+import BookModal from "./bookModal";
 import lookup from "./fetchData/lookup";
 import { styled } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import RemoveIcon from "@material-ui/icons/Remove";
-import BookModal from "./bookModal";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
-import Slider from "@material-ui/core/Slider";
 
 function valuetext(value) {
   return `${value}`;
@@ -81,6 +78,17 @@ function CartBooks(props) {
   );
 }
 
+function BookModalBody(props) {
+  return (
+    <>
+      <Typography id="transition-modal-title" variant="h6" component="h2">
+        {"props.item.title"}
+      </Typography>
+      <Typography id="transition-modal-description" sx={{ mt: 2 }}></Typography>
+    </>
+  );
+}
+
 function filterValue(books, language, cat, value, setBooks) {
   let filteredBooks = books.filter((book) => {
     return language.includes(book.language);
@@ -111,14 +119,13 @@ export default function SearchPage(props) {
 
   useEffect(() => {
     const url = new URL(window.location.href);
-    lookup(
-      "GET",
-      null,
-      `/book/search/1?search=${url.searchParams
-        .get("str")
-        .split(" ")
-        .join("+")}`,
-    ).then((data) => {
+    let search;
+    try {
+      search = url.searchParams.get("str").split(" ").join("+");
+    } catch (err) {
+      search = "";
+    }
+    lookup("GET", null, `/book/search/1?search=${search}`).then((data) => {
       setBooks(data[0].books);
     });
   }, []);
@@ -253,23 +260,7 @@ export default function SearchPage(props) {
           >
             {books.map((item, i) => (
               <BookModal
-                modalBody={(props) => {
-                  return (
-                    <>
-                      <Typography
-                        id="transition-modal-title"
-                        variant="h6"
-                        component="h2"
-                      >
-                        {"props.item.title"}
-                      </Typography>
-                      <Typography
-                        id="transition-modal-description"
-                        sx={{ mt: 2 }}
-                      ></Typography>
-                    </>
-                  );
-                }}
+                modalBody={BookModalBody}
                 component={CartBooks}
                 item={item}
                 key={i}
