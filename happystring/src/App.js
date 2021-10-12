@@ -97,11 +97,7 @@ function App() {
             )}
           </Route>
           <Route path="/search">
-            <SearchPage
-              add={addToCart}
-              setCart={setCart}
-              remove={removeFromCart}
-            />
+            <SearchPage add={addToCart} setCart={setCart} />
           </Route>
           <Route path="/order">
             <OrderPage />

@@ -68,7 +68,13 @@ function CartBooks(props) {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Button className={classes.submit} variant="contained">
+            <Button
+              className={classes.submit}
+              variant="contained"
+              onCLick={() => {
+                props.fun[0](props.item._id, props.fun[1]);
+              }}
+            >
               Add to Cart
             </Button>
           </Box>
@@ -264,6 +270,7 @@ export default function SearchPage(props) {
                 modalBody={BookModalBody}
                 component={CartBooks}
                 item={item}
+                fun={[props.fun.addToCart, props.fun.setCart]}
                 key={i}
               />
             ))}
