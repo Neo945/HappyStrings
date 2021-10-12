@@ -17,81 +17,6 @@ import { styled } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import BookModal from "./bookModal";
-import { useState, useEffect } from "react";
-import lookup from "./fetchData/lookup";
-
-const cart = [
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 2,
-    name: "Product 2",
-    price: "10",
-    quantity: 2,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 3,
-    name: "Product 3",
-    price: "10",
-    quantity: 3,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 4,
-    name: "Product 4",
-    price: "10",
-    quantity: 4,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 5,
-    name: "Product 5",
-    price: "10",
-    quantity: 5,
-    image: "https://picsum.photos/200/300",
-  },
-];
 
 const useStyle = makeStyles((theme) => ({
   submit: {
@@ -153,11 +78,21 @@ function CartBooks(props) {
             alignItems="center"
           >
             <Box display="flex" alignItems="center">
-              <IconButton aria-label="add">
+              <IconButton
+                aria-label="add"
+                onClick={() => {
+                  props.fun[2](props.fun[1], props.item.book._id);
+                }}
+              >
                 <AddIcon />
               </IconButton>
               <Typography>{props.item.quantity}</Typography>
-              <IconButton aria-label="add">
+              <IconButton
+                aria-label="remove"
+                onClick={() => {
+                  props.fun[2](props.fun[0], props.item.book._id);
+                }}
+              >
                 <RemoveIcon />
               </IconButton>
             </Box>
@@ -180,12 +115,6 @@ function getPrice(cart) {
 }
 
 export default function CartV2(props) {
-  const [cart, setCart] = useState([]);
-  useEffect(() => {
-    lookup("GET", null, "/auth/cart").then((res) => {
-      setCart(res[0].cart);
-    });
-  }, []);
   return (
     <div>
       <Box height="70px" />
@@ -214,11 +143,12 @@ export default function CartV2(props) {
               width: "70vw",
             }}
           >
-            {cart.map((item, i) => (
+            {props.cart.map((item, i) => (
               <BookModal
                 component={CartBooks}
                 modalBody={BookModalBody}
                 item={item}
+                fun={[props.removeFromCart, props.setCart, props.addToCart]}
                 key={i}
               />
             ))}
@@ -245,8 +175,8 @@ export default function CartV2(props) {
                     <TableBody>
                       {[
                         {
-                          rowName: `Price (${cart.length} items)`,
-                          value: `₹${getPrice(cart)}`,
+                          rowName: `Price (${props.cart.length} items)`,
+                          value: `₹${getPrice(props.cart)}`,
                         },
                         {
                           rowName: `Discounts`,
@@ -258,7 +188,7 @@ export default function CartV2(props) {
                         },
                         {
                           rowName: `Total Amount`,
-                          value: `₹${getPrice(cart) - 700}`,
+                          value: `₹${getPrice(props.cart) - 700}`,
                           component: "h4",
                         },
                       ].map((row, i) => (

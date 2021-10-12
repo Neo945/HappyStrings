@@ -22,6 +22,17 @@ import { makeStyles } from "@material-ui/core";
 import { useState, useEffect } from "react";
 import lookup from "./components/fetchData/lookup";
 
+function addToCart(setCart, book) {
+  lookup("POST", { book }, "/user/add/cart").then((data) => {
+    setCart(data[0].cart);
+  });
+}
+function removeFromCart(setCart, book) {
+  lookup("POST", { book }, "/user/remove/cart").then((data) => {
+    setCart(data[0].cart);
+  });
+}
+
 function App() {
   makeStyles((theme) => ({
     "@global": {
@@ -37,6 +48,7 @@ function App() {
     },
   }))();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const [cart, setCart] = useState([]);
   useEffect(() => {
     if (user === null) {
       lookup("GET", null, "/user/get").then((data) => {
@@ -47,6 +59,9 @@ function App() {
           localStorage.setItem("user", null);
           setUser(null);
         }
+      });
+      lookup("GET", null, "/user/cart").then((data) => {
+        setCart(data[0].cart);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,14 +85,23 @@ function App() {
           </Route>
           <Route path="/cart">
             {user ? (
-              <CartV2 />
+              <CartV2 cart={cart} />
             ) : (
               //<Redirect to="/login" />
-              <CartV2 />
+              <CartV2
+                cart={cart}
+                add={addToCart}
+                setCart={setCart}
+                remove={removeFromCart}
+              />
             )}
           </Route>
           <Route path="/search">
-            <SearchPage />
+            <SearchPage
+              add={addToCart}
+              setCart={setCart}
+              remove={removeFromCart}
+            />
           </Route>
           <Route path="/order">
             <OrderPage />

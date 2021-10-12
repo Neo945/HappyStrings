@@ -20,7 +20,11 @@ export default function BookModal(props) {
   const handleClose = () => setOpen(false);
   return (
     <>
-      <props.component handleOpen={handleOpen} item={props.item} />
+      <props.component
+        handleOpen={handleOpen}
+        fun={props.fun}
+        item={props.item}
+      />
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
