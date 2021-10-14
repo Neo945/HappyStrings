@@ -6,7 +6,6 @@ import {
   Navbar,
   HomePage,
   Checkout,
-  Payment,
   OrderPage,
   // Cart,
   CartV2,
@@ -78,14 +77,16 @@ function App() {
             <Signup />
           </Route>
           <Route path="/checkout">
-            {user ? <Checkout /> : <Redirect to="/login" />}
-          </Route>
-          <Route path="/payment">
-            {user ? <Payment /> : <Redirect to="/login" />}
+            {user ? <Checkout /> : <Checkout to="/login" />}
           </Route>
           <Route path="/cart">
             {user ? (
-              <CartV2 cart={cart} />
+              <CartV2
+                cart={cart}
+                add={addToCart}
+                setCart={setCart}
+                remove={removeFromCart}
+              />
             ) : (
               //<Redirect to="/login" />
               <CartV2
