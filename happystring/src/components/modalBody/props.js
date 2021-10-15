@@ -11,7 +11,7 @@ function Book(props) {
         {props.name}
       </Typography>
       <Typography component="h4" style={{ textAlign: "left" }}>
-        By {"props.author"}
+        By {props.author}
       </Typography>
       <Typography
         component="h1"
@@ -22,11 +22,12 @@ function Book(props) {
       <Typography component="p" style={{ textAlign: "left" }}>
         Description - {props.description}
       </Typography>
+      <br />
       <Typography
-        component="p"
+        component="pre"
         style={{ textAlign: "left", fontWeight: "bolder" }}
       >
-        Offers{" "}
+        {`Available offers \n\tBank Offer 5% Unlimited Cashback on Flipkart Axis Bank Credit Card T&C\n\tBank Offer 15% Instant discount on first Pay Later order of ₹500 and above T&C\n`}
       </Typography>
     </div>
   );

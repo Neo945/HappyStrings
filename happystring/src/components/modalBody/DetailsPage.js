@@ -35,6 +35,7 @@ const useStyle = makeStyles((theme) => ({
 
 function DetailsPage(props) {
   const classes = useStyle();
+  console.log(props.item);
   return (
     <>
       <Box
@@ -55,7 +56,7 @@ function DetailsPage(props) {
           <ReactImageMagnify
             {...{
               smallImage: {
-                alt: "Wristwatch by Ted Baker London",
+                alt: props.item.name,
                 isFluidWidth: true,
                 src: "https://cdn4.buysellads.net/uu/1/97758/1633132110-1633110694-158338930.jpg",
               },
@@ -107,10 +108,10 @@ function DetailsPage(props) {
           <CardContent>
             <div>
               <Book
-                name="Shakespeare"
-                price="450"
-                description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nemo, molestiae. A mollitia culpa minima vitae illum. Deserunt natus quidem et."
-                highlights="Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque esse ab animi quibusdam officia maiores facilis consectetur sequi alias voluptate, qui cupiditate laboriosam minima illo."
+                name={props.item.title}
+                price={props.item.price}
+                description={props.item.description}
+                author={props.item.author.name}
               />
             </div>
             <br />

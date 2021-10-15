@@ -93,18 +93,7 @@ const HomePageBook = (props) => {
     </Paper>
   );
 };
-const ModalPage = (props) => {
-  return (
-    <>
-      <Typography id="transition-modal-title" variant="h6" component="h2">
-        {props.item.title}
-      </Typography>
-      <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-        {`₹${props.item.price}`}
-      </Typography>
-    </>
-  );
-};
+
 export default function HomePage() {
   const classes = useStyle();
   const [book1, setBook1] = useState([]);
@@ -181,12 +170,7 @@ export default function HomePage() {
                 className="hs trending"
               >
                 {ele[1].map((book, i) => (
-                  <BookModal
-                    key={i}
-                    modalBody={ModalPage}
-                    component={HomePageBook}
-                    item={book}
-                  />
+                  <BookModal key={i} component={HomePageBook} item={book} />
                 ))}
               </div>
             </Box>

@@ -10,7 +10,8 @@ module.exports = {
             req,
             res,
             async () => {
-                const books = await Book.aggregate([{ $sample: { size: 10 } }]);
+                let books = await Book.aggregate([{ $sample: { size: 10 } }]);
+                books = await Book.populate(books, { path: 'author' });
                 res.status(200).json(books);
             },
             500

@@ -7,7 +7,6 @@ import {
   HomePage,
   Checkout,
   OrderPage,
-  // Cart,
   CartV2,
   SearchPage,
   DetailsPage,
