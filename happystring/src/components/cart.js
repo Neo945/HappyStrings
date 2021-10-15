@@ -18,79 +18,6 @@ import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import BookModal from "./bookModal";
 
-const cart = [
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 2,
-    name: "Product 2",
-    price: "10",
-    quantity: 2,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 3,
-    name: "Product 3",
-    price: "10",
-    quantity: 3,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 4,
-    name: "Product 4",
-    price: "10",
-    quantity: 4,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 5,
-    name: "Product 5",
-    price: "10",
-    quantity: 5,
-    image: "https://picsum.photos/200/300",
-  },
-];
-
 const useStyle = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -137,12 +64,12 @@ function CartBooks(props) {
           style={{
             width: "100%",
             height: "60%",
-            background: `url(${props.item.image}) no-repeat center center`,
+            background: `url(${props.item.book.image}) no-repeat center center`,
             backgroundSize: "cover",
           }}
         />
         <Typography variant="h5" style={{ marginTop: "10px" }} align="left">
-          {props.item.name}
+          {props.item.book.name}
         </Typography>
         <Box position="absolute" bottom="10px" width="90%">
           <Box
@@ -151,11 +78,21 @@ function CartBooks(props) {
             alignItems="center"
           >
             <Box display="flex" alignItems="center">
-              <IconButton aria-label="add">
+              <IconButton
+                aria-label="add"
+                onClick={() => {
+                  props.fun[2](props.fun[1], props.item.book._id);
+                }}
+              >
                 <AddIcon />
               </IconButton>
-              <Typography>{0}</Typography>
-              <IconButton aria-label="add">
+              <Typography>{props.item.quantity}</Typography>
+              <IconButton
+                aria-label="remove"
+                onClick={() => {
+                  props.fun[2](props.fun[0], props.item.book._id);
+                }}
+              >
                 <RemoveIcon />
               </IconButton>
             </Box>
@@ -167,6 +104,14 @@ function CartBooks(props) {
       </Item>
     </Grid>
   );
+}
+
+function getPrice(cart) {
+  let price = 0;
+  cart.forEach((ele) => {
+    price += ele.book.price * ele.quantity;
+  });
+  return price;
 }
 
 export default function CartV2(props) {
@@ -198,11 +143,12 @@ export default function CartV2(props) {
               width: "70vw",
             }}
           >
-            {cart.map((item, i) => (
+            {props.cart.map((item, i) => (
               <BookModal
                 component={CartBooks}
                 modalBody={BookModalBody}
                 item={item}
+                fun={[props.removeFromCart, props.setCart, props.addToCart]}
                 key={i}
               />
             ))}
@@ -229,8 +175,8 @@ export default function CartV2(props) {
                     <TableBody>
                       {[
                         {
-                          rowName: `Price (${cart.length} items)`,
-                          value: `₹91,989`,
+                          rowName: `Price (${props.cart.length} items)`,
+                          value: `₹${getPrice(props.cart)}`,
                         },
                         {
                           rowName: `Discounts`,
@@ -242,7 +188,7 @@ export default function CartV2(props) {
                         },
                         {
                           rowName: `Total Amount`,
-                          value: `₹91,989`,
+                          value: `₹${getPrice(props.cart) - 700}`,
                           component: "h4",
                         },
                       ].map((row, i) => (

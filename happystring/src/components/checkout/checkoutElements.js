@@ -1,31 +1,8 @@
 export const inputFormElements = [
   {
-    name: "firstname",
-    label: "First Name",
-    placeholder: "Enter First Name",
-    variant: "outlined",
-    fullWidth: true,
-    required: true,
-    xs: 12,
-    sm: 6,
-  },
-
-  {
-    name: "lastname",
-    label: "Last Name",
-    placeholder: "Enter Last Name",
-    variant: "outlined",
-    fullWidth: true,
-    required: true,
-    xs: 12,
-    sm: 6,
-  },
-
-  {
-    name: "email",
-    type: "email",
-    label: "Email",
-    placeholder: "Enter Email",
+    name: "cardname",
+    label: "Name on Card",
+    placeholder: "Name on Card",
     variant: "outlined",
     fullWidth: true,
     required: true,
@@ -34,15 +11,51 @@ export const inputFormElements = [
   },
 
   {
-    name: "phonenumber",
+    name: "debitcreditnumber",
     type: "number",
-    label: "Phone Number",
-    placeholder: "Enter Phone Number",
+    label: "Debit / Credit Card Number ",
+    placeholder: "Debit / Credit Card Number",
     variant: "outlined",
     fullWidth: true,
     required: true,
     xs: 12,
     sm: 12,
+  },
+
+  {
+    name: "month",
+    type: "number",
+    label: "MM",
+    placeholder: "Expiry Month",
+    variant: "outlined",
+    fullWidth: true,
+    required: true,
+    xs: 12,
+    sm: 4,
+  },
+
+  {
+    name: "year",
+    type: "number",
+    label: "YYYY",
+    placeholder: "Expiry Year",
+    variant: "outlined",
+    fullWidth: true,
+    required: true,
+    xs: 12,
+    sm: 4,
+  },
+
+  {
+    name: "cvvr",
+    type: "number",
+    label: "Enter CVV",
+    placeholder: "Enter CVV",
+    variant: "outlined",
+    fullWidth: true,
+    required: true,
+    xs: 12,
+    sm: 4,
   },
 
   {

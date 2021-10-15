@@ -1,4 +1,5 @@
 const { User, BaseUser } = require('../models/user');
+const Cart = require('../models/cart');
 const Book = require('../models/book');
 const Purchase = require('../models/purchase');
 const Order = require('../models/Order');
@@ -92,8 +93,45 @@ module.exports = {
             req,
             res,
             async () => {
-                const user = await User.findOneAndUpdate({ user: req.user._id }, { $push: { cart: req.params.id } });
-                res.status(200).json(user);
+                let cart;
+                if (await Cart.exists({ user: req.user._id, book: req.body.book })) {
+                    cart = await Cart.findOne({ user: req.user._id, book: req.body.book });
+                    cart.quantity += 1;
+                    await cart.save();
+                } else {
+                    cart = await Cart.create({
+                        user: req.user._id,
+                        book: req.body.book,
+                        quantity: 1,
+                    });
+                }
+                const user = await User.findOneAndUpdate({ user: req.user._id }, { $push: { cart: cart._id } })
+                    .populate('Cart', '-_id')
+                    .populate('Book', '-_id -__v -stock');
+                res.status(200).json({ message: 'success', cart: { ...user.cart } });
+            },
+            500
+        );
+    },
+    removeFromCart: async (req, res) => {
+        errorHandler(
+            req,
+            res,
+            async () => {
+                const cart = await Cart.findById(req.body.cart._id);
+                if (cart.quantity > 1) {
+                    cart.quantity -= 1;
+                    await cart.save();
+                } else {
+                    await cart.remove();
+                    await User.findOneAndUpdate({ user: req.user._id }, { $pull: { cart: cart._id } })
+                        .populate('Cart', '-_id')
+                        .populate('Book', '-_id -__v -stock');
+                }
+                const user = await User.findOne({ _id: req.user._id })
+                    .populate('Cart', '-_id')
+                    .populate('Book', '-_id -__v -stock');
+                res.status(200).json({ message: 'success', cart: { ...user.cart } });
             },
             500
         );
@@ -130,8 +168,13 @@ module.exports = {
             req,
             res,
             async () => {
-                const user = await User.findOne({ user: req.user._id }).populate('Book', '-_id -__v -stock');
-                res.status(200).json({ message: 'success', cart: { ...user.cart } });
+                if (req.user !== null) {
+                    const user = await User.findOne({ user: req.user._id })
+                        .populate('Cart', '-_id')
+                        .populate('Book', '-_id -__v -stock');
+                    res.status(200).json({ message: 'success', cart: { ...user.cart } });
+                }
+                res.status(401).json({ message: 'Unauthrized' });
             },
             500
         );
