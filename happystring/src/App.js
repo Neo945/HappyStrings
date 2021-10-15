@@ -48,6 +48,7 @@ function App() {
   }))();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [cart, setCart] = useState([]);
+  const [payment, setPayment] = useState([]);
   useEffect(() => {
     if (user === null) {
       lookup("GET", null, "/user/get").then((data) => {
@@ -77,7 +78,11 @@ function App() {
             <Signup />
           </Route>
           <Route path="/checkout">
-            {user ? <Checkout /> : <Checkout to="/login" />}
+            {user ? (
+              <Checkout books={payment} />
+            ) : (
+              <Checkout to="/login" books={payment} />
+            )}
           </Route>
           <Route path="/cart">
             {user ? (
@@ -86,6 +91,7 @@ function App() {
                 add={addToCart}
                 setCart={setCart}
                 remove={removeFromCart}
+                setPayment={setPayment}
               />
             ) : (
               //<Redirect to="/login" />
@@ -94,11 +100,16 @@ function App() {
                 add={addToCart}
                 setCart={setCart}
                 remove={removeFromCart}
+                setPayment={setPayment}
               />
             )}
           </Route>
           <Route path="/search">
-            <SearchPage add={addToCart} setCart={setCart} />
+            <SearchPage
+              add={addToCart}
+              setCart={setCart}
+              setPayment={setPayment}
+            />
           </Route>
           <Route path="/order">
             <OrderPage />

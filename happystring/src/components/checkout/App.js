@@ -77,7 +77,6 @@ function InputData() {
               endIcon={<AddShoppingCartIcon />}
               style={margin}
               className={classes.btn}
-              type="submit"
               variant="contained"
             >
               Edit Cart
@@ -214,7 +213,7 @@ export default function Checkout(props) {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell align="left">PRICE DETAILS</TableCell>
+                      <TableCell align="left">Final Orders</TableCell>
                       <TableCell align="left"></TableCell>
                     </TableRow>
                   </TableHead>
@@ -223,10 +222,6 @@ export default function Checkout(props) {
                       {
                         rowName: `Price (${props.books?.length} items)`,
                         value: `₹${getPrice(props.books)}`,
-                      },
-                      {
-                        rowName: `Delivery Charges`,
-                        value: `FREE`,
                       },
                       {
                         rowName: `Total Amount`,
