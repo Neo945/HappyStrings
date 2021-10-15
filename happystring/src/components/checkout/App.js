@@ -18,7 +18,6 @@ import {
 import BookModal from "../bookModal";
 import lookup from "../fetchData/lookup";
 import { styled } from "@material-ui/core";
-import { inputFormElements } from "./checkoutElements";
 import EditIcon from "@material-ui/icons/Edit";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import { PaymentInputsWrapper, usePaymentInputs } from "react-payment-inputs";
@@ -82,7 +81,14 @@ const cardStyle = {
   },
 };
 
-function InputData() {
+function InputData(props) {
+  const [information, setInformation] = useState({
+    cardNumber: "",
+    expiry: "",
+    cvc: "",
+    address: "",
+    cardname: "",
+  });
   const {
     wrapperProps,
     getCardImageProps,
@@ -90,17 +96,64 @@ function InputData() {
     getExpiryDateProps,
     getCVCProps,
   } = usePaymentInputs();
-  const margin = { margin: "0 6px" };
   const classes = useStyle();
   return (
     <div style={{ padding: "10px" }}>
-      <form>
+      <form
+        onSubmit={async (event) => {
+          event.preventDefault();
+          const res = lookup("POST", "/api/checkout", {
+            information,
+            cart: props.books,
+          });
+          if (res[1] === 201) {
+            props.fun(1, res[0].message);
+          } else {
+            props.fun(1, res[0].message);
+            alert("Something went wrong");
+          }
+        }}
+      >
         <Grid container spacing={2}>
-          {inputFormElements.map((input, i) => (
-            <Grid key={i} xs={input.xs} sm={input.sm} item>
-              <TextField {...input} />
-            </Grid>
-          ))}
+          <Grid xs={12} sm={12} item>
+            <TextField
+              value={information.cardname}
+              onChange={(e) => {
+                setInformation({
+                  ...information,
+                  cardname: e.target.value,
+                });
+              }}
+              {...{
+                name: "cardname",
+                label: "Name on Card",
+                placeholder: "Name on Card",
+                variant: "outlined",
+                fullWidth: true,
+                required: true,
+              }}
+            />
+          </Grid>
+          <Grid xs={12} sm={12} item>
+            <TextField
+              value={information.address}
+              onChange={(e) => {
+                setInformation({
+                  ...information,
+                  address: e.target.value,
+                });
+              }}
+              {...{
+                name: "address",
+                label: "Billing Address",
+                multiline: true,
+                placeholder: "Enter Billing Address",
+                variant: "outlined",
+                fullWidth: true,
+                required: true,
+              }}
+            />
+          </Grid>
           <Grid xs={12} sm={12} item>
             <PaymentInputsWrapper {...wrapperProps} styles={cardStyle}>
               <svg
@@ -108,6 +161,14 @@ function InputData() {
                 {...getCardImageProps({ images })}
               />
               <input
+                required
+                value={information.cardNumber}
+                onChange={(e) => {
+                  setInformation({
+                    ...information,
+                    cardNumber: e.target.value,
+                  });
+                }}
                 style={{
                   backgroundColor: "#424242",
                   width: "65%",
@@ -116,10 +177,26 @@ function InputData() {
                 {...getCardNumberProps()}
               />
               <input
+                required
+                value={information.expiry}
+                onChange={(e) => {
+                  setInformation({
+                    ...information,
+                    expiry: e.target.value,
+                  });
+                }}
                 style={{ backgroundColor: "#424242" }}
                 {...getExpiryDateProps()}
               />
               <input
+                required
+                value={information.cvc}
+                onChange={(e) => {
+                  setInformation({
+                    ...information,
+                    cvc: e.target.value,
+                  });
+                }}
                 style={{ backgroundColor: "#424242" }}
                 {...getCVCProps()}
               />
@@ -204,16 +281,6 @@ function CartBooks(props) {
   );
 }
 
-function BookModalBody(props) {
-  return (
-    <>
-      <Typography id="transition-modal-title" variant="h6" component="h2">
-        {"props.item.title"}
-      </Typography>
-      <Typography id="transition-modal-description" sx={{ mt: 2 }}></Typography>
-    </>
-  );
-}
 function getPrice(cart) {
   let price = 0;
   cart?.forEach((ele) => {
@@ -223,103 +290,124 @@ function getPrice(cart) {
 }
 
 export default function Checkout(props) {
+  const classes = useStyle();
+  const [status, setStatus] = useState({ status: 0, message: "" });
   return (
-    <div>
-      <Box height="70px" />
-      <Typography
-        variant="h4"
-        style={{
-          margin: "1.5%",
-        }}
-      >
-        Cart
-      </Typography>
-      <Box display="flex" justifyContent="center">
-        <div
-          style={{
-            height: `${window.innerHeight - 170}px`,
-            width: "75%",
-            overflowY: "scroll",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <Grid
-            container
-            spacing={2}
+    <>
+      {status.status === 0 ? (
+        <div>
+          <Box height="70px" />
+          <Typography
+            variant="h4"
             style={{
-              width: "70vw",
+              margin: "1.5%",
             }}
           >
-            {props.books?.map((item, i) => (
-              <BookModal
-                modalBody={BookModalBody}
-                component={CartBooks}
-                item={item}
-                key={i}
-              />
-            ))}
-          </Grid>
-        </div>
-        <Box width="25vw" display="flex" justifyContent="center">
-          <Paper style={{ width: "90%", height: "fit-content" }}>
-            <Box
-              display="flex"
-              justifyContent="center"
-              flexDirection="column"
-              width="100%"
-              height="100%"
+            Cart
+          </Typography>
+          <Box display="flex" justifyContent="center">
+            <div
+              style={{
+                height: `${window.innerHeight - 170}px`,
+                width: "75%",
+                overflowY: "scroll",
+                display: "flex",
+                justifyContent: "center",
+              }}
             >
-              <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align="left">Final Orders</TableCell>
-                      <TableCell align="left"></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {[
-                      {
-                        rowName: `Price (${props.books?.length} items)`,
-                        value: `₹${getPrice(props.books)}`,
-                      },
-                      {
-                        rowName: `Total Amount`,
-                        value: `₹${getPrice(props.books) - 700}`,
-                        component: "h4",
-                      },
-                    ].map((row, i) => (
-                      <TableRow
-                        key={i}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell component="th" scope="row">
-                          <Box
-                            component={row.component ? row.component : "div"}
+              <Grid
+                container
+                spacing={2}
+                style={{
+                  width: "70vw",
+                }}
+              >
+                {props.books?.map((item, i) => (
+                  <BookModal component={CartBooks} item={item} key={i} />
+                ))}
+              </Grid>
+            </div>
+            <Box width="25vw" display="flex" justifyContent="center">
+              <Paper style={{ width: "90%", height: "fit-content" }}>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  flexDirection="column"
+                  width="100%"
+                  height="100%"
+                >
+                  <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell align="left">Final Orders</TableCell>
+                          <TableCell align="left"></TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {[
+                          {
+                            rowName: `Price (${props.books?.length} items)`,
+                            value: `₹${getPrice(props.books)}`,
+                          },
+                          {
+                            rowName: `Total Amount`,
+                            value: `₹${getPrice(props.books) - 700}`,
+                            component: "h4",
+                          },
+                        ].map((row, i) => (
+                          <TableRow
+                            key={i}
+                            sx={{
+                              "&:last-child td, &:last-child th": { border: 0 },
+                            }}
                           >
-                            {row.rowName}
-                          </Box>
-                        </TableCell>
-                        <TableCell component="th" scope="row">
-                          <Box
-                            component={row.component ? row.component : "div"}
-                          >
-                            {row.value}
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                            <TableCell component="th" scope="row">
+                              <Box
+                                component={
+                                  row.component ? row.component : "div"
+                                }
+                              >
+                                {row.rowName}
+                              </Box>
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                              <Box
+                                component={
+                                  row.component ? row.component : "div"
+                                }
+                              >
+                                {row.value}
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Box>
+                <InputData books={props.books} fun={setStatus} />
+              </Paper>
             </Box>
-            <InputData />
+          </Box>
+        </div>
+      ) : (
+        <Box width="100vw" height="100vh">
+          <Paper>
+            <Typography variant="h4" align="center">
+              {status.message}
+            </Typography>
+            <Button
+              className={classes.btn}
+              onClick={() => {
+                window.location.href = "/search";
+              }}
+            >
+              Go Back
+            </Button>
           </Paper>
         </Box>
-      </Box>
-    </div>
+      )}
+    </>
   );
 }
