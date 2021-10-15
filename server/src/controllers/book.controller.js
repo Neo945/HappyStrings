@@ -90,7 +90,7 @@ module.exports = {
                     ],
                 })
                     .limit(10 * parseInt(req.params.page, 10))
-                    .populate('Author');
+                    .populate('author');
                 res.status(200).json({ books });
             },
             500
