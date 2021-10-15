@@ -114,9 +114,15 @@ function App() {
           <Route path="/order">
             <OrderPage />
           </Route>
+
+          <Route path = "/test">
+            <DetailsPage />
+          </Route>
+
           <Route path="/">
             <HomePage />
           </Route>
+          
         </Switch>
       </Router>
     </div>
