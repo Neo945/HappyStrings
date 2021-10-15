@@ -21,7 +21,7 @@ import {
 import { makeStyles } from "@material-ui/core";
 import { useState, useEffect } from "react";
 import lookup from "./components/fetchData/lookup";
-
+import DetailsPage from "./DetailsPage";
 function App() {
   makeStyles((theme) => ({
     "@global": {
@@ -37,21 +37,21 @@ function App() {
     },
   }))();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
-  useEffect(() => {
-    if (user === null) {
-      lookup("GET", null, "/user/get")
-        .then((data) => {
-          if (data[0].user) {
-            localStorage.setItem("user", JSON.stringify(data[0].user));
-            setUser(data[0].user);
-          } else {
-            localStorage.setItem("user", null);
-            setUser(null);
-          }
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+// useEffect(() => {
+//   if (user === null) {
+//     lookup("GET", null, "/user/get")
+//       .then((data) => {
+//         if (data[0].user) {
+//           localStorage.setItem("user", JSON.stringify(data[0].user));
+//           setUser(data[0].user);
+//         } else {
+//           localStorage.setItem("user", null);
+//           setUser(null);
+//         }
+//       });
+//   }
+//   // eslint-disable-next-line react-hooks/exhaustive-deps
+// }, []);
   return (
     <div>
       <Router>
@@ -78,9 +78,15 @@ function App() {
           <Route path="/order">
             <OrderPage />
           </Route>
+
+          <Route path = "/test">
+            <DetailsPage />
+          </Route>
+
           <Route path="/">
             <HomePage />
           </Route>
+          
         </Switch>
       </Router>
     </div>
