@@ -8,9 +8,13 @@ import {
   Box,
   InputBase,
   Paper,
+  IconButton,
+  Badge,
 } from "@material-ui/core";
+
 import { Link } from "react-router-dom";
 import logo from "./static/Union.png";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import SearchIcon from "@material-ui/icons/Search";
 import getSearch from "./getSearch";
 import lookup from "./fetchData/lookup";
@@ -69,7 +73,7 @@ function Logout() {
   );
 }
 
-function Navbar(params) {
+function Navbar(props) {
   const classes = useStyles();
   const [search, setSearch] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -169,6 +173,16 @@ function Navbar(params) {
           {JSON.parse(localStorage.getItem("user")) !== null ? (
             <Logout />
           ) : null}
+          <IconButton
+            component={Link}
+            to="/cart"
+            aria-label="Show cart items"
+            color="inherit"
+          >
+            <Badge badgeContent={props.totalItems} color="secondary">
+              <ShoppingCartIcon />
+            </Badge>
+          </IconButton>
         </Box>
       </Toolbar>
     </AppBar>
