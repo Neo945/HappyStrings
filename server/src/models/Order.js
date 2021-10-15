@@ -12,6 +12,7 @@ const OrderSchema = new Schema(
         status: {
             type: String,
             enum: ['On the way', 'shipped', 'etc'],
+            default: 'On the way',
             required: true,
         },
     },

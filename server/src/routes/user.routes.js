@@ -21,5 +21,7 @@ router.get('/google/redirect', passport.authenticate('google'), view.googleOauth
 router.get('/cart', view.getCart);
 router.post('/add/cart', view.addToCart);
 router.post('/remove/cart', view.removeFromCart);
+router.post('/orders', view.getOrder);
+router.post('/purchase', view.getPurchaseHistory);
 
 module.exports = router;

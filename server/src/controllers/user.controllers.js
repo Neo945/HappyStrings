@@ -202,4 +202,19 @@ module.exports = {
             500
         );
     },
+    getOrder: async (req, res) => {
+        errorHandler(
+            req,
+            res,
+            async () => {
+                const user = await User.findOne({ user: req.user._id });
+                const order = await Order.find({ user: user._id })
+                    .populate('Purchase', '-_id')
+                    .populate('Book', '-_id -__v -stock')
+                    .populate('author', '-_id');
+                res.status(200).json({ message: 'success', order: { ...order } });
+            },
+            500
+        );
+    },
 };

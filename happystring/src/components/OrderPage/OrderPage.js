@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import "./OrderPage.css";
 import { Box, Grid, Paper } from "@material-ui/core";
+import lookup from "../fetchData/lookup";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,14 +17,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function OrderPage() {
+  const [books, setBooks] = React.useState([]);
   const classes = useStyles();
+  React.useEffect(() => {
+    lookup("GET", null, "/auth/orders").then((res) => {
+      setBooks(res[0].order);
+    });
+  });
 
   return (
     <>
       <Box height="7vh" />
       <Box width="100vw" height="93vh" style={{ overflowY: "scroll" }}>
-        {[1, 2, 3, 4, 5, 6, 7].map((item) => (
-          <Paper key={item} className={classes.root}>
+        {books.map((item) => (
+          <Paper key={item._id} className={classes.root}>
             <Grid container spacing={3}>
               <Grid item xs={3}>
                 <img
@@ -34,20 +41,20 @@ function OrderPage() {
               </Grid>
               <Grid item xs={3}>
                 <div className="book-name">
-                  <h3>Atomic Habits</h3>
-                  <h4>James Clear</h4>
+                  <h3>{books.book.product.title}</h3>
+                  <h4>{books.book.product.author.name}</h4>
                 </div>
               </Grid>
               <Grid item xs={3}>
                 <div className="book-price">
                   <h3>Price</h3>
-                  <h4>400</h4>
+                  <h4>{books.book.product.price}</h4>
                 </div>
               </Grid>
               <Grid item xs={3}>
                 <div className="status">
                   <h4>Status</h4>
-                  <p>Delivered</p>
+                  <p>{books.status}</p>
                 </div>
               </Grid>
             </Grid>
