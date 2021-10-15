@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { css } from "styled-components";
 import {
   Box,
   Button,
@@ -20,13 +21,15 @@ import { styled } from "@material-ui/core";
 import { inputFormElements } from "./checkoutElements";
 import EditIcon from "@material-ui/icons/Edit";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
+import { PaymentInputsWrapper, usePaymentInputs } from "react-payment-inputs";
+import images from "react-payment-inputs/images";
 
 const useStyle = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
     height: "50px",
     width: "fit-content",
-    padding: "0px 20px",
+    padding: "0px 10px",
     borderRadius: "50px",
     fontSize: "1em",
     color: "#ffffff",
@@ -36,7 +39,7 @@ const useStyle = makeStyles((theme) => ({
     },
   },
   btn: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(1, 0, 2),
     height: "50px",
     width: "207px",
     borderRadius: "50px",
@@ -49,14 +52,48 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
+const cardStyle = {
+  fieldWrapper: {
+    base: css`
+      background-color: #424242;
+      width: 100%;
+    `,
+  },
+  inputWrapper: {
+    base: css`
+      background-color: #424242;
+    `,
+    errored: css`
+      background-color: #424242;
+    `,
+  },
+  input: {
+    base: css`
+      color: white;
+    `,
+    errored: css`
+      color: red;
+    `,
+  },
+  errorText: {
+    base: css`
+      color: red;
+    `,
+  },
+};
+
 function InputData() {
+  const {
+    wrapperProps,
+    getCardImageProps,
+    getCardNumberProps,
+    getExpiryDateProps,
+    getCVCProps,
+  } = usePaymentInputs();
   const margin = { margin: "0 6px" };
   const classes = useStyle();
   return (
     <div style={{ padding: "10px" }}>
-      {/* <Typography gutterBottom variant="h3" align="center">
-        Checkout
-      </Typography> */}
       <form>
         <Grid container spacing={2}>
           {inputFormElements.map((input, i) => (
@@ -64,6 +101,30 @@ function InputData() {
               <TextField {...input} />
             </Grid>
           ))}
+          <Grid xs={12} sm={12} item>
+            <PaymentInputsWrapper {...wrapperProps} styles={cardStyle}>
+              <svg
+                style={{ backgroundColor: "#424242" }}
+                {...getCardImageProps({ images })}
+              />
+              <input
+                style={{
+                  backgroundColor: "#424242",
+                  width: "65%",
+                  marginRight: "10%",
+                }}
+                {...getCardNumberProps()}
+              />
+              <input
+                style={{ backgroundColor: "#424242" }}
+                {...getExpiryDateProps()}
+              />
+              <input
+                style={{ backgroundColor: "#424242" }}
+                {...getCVCProps()}
+              />
+            </PaymentInputsWrapper>
+          </Grid>
 
           <Box
             width="100%"
@@ -75,7 +136,7 @@ function InputData() {
             <Button
               startIcon={<EditIcon />}
               endIcon={<AddShoppingCartIcon />}
-              style={margin}
+              // style={margin}
               className={classes.btn}
               variant="contained"
             >
