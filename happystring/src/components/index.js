@@ -7,6 +7,7 @@ import Cart from "./cart/App";
 import CartV2 from "./cart";
 import SearchPage from "./SearchPage";
 import OrderPage from "./OrderPage/OrderPage";
+import DetailsPage from "./modalBody/DetailsPage";
 
 export {
   OrderPage,
@@ -18,4 +19,5 @@ export {
   Checkout,
   Cart,
   CartV2,
+  DetailsPage,
 };

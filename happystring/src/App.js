@@ -10,6 +10,7 @@ import {
   // Cart,
   CartV2,
   SearchPage,
+  DetailsPage,
 } from "./components";
 import {
   BrowserRouter as Router,
@@ -115,14 +116,13 @@ function App() {
             <OrderPage />
           </Route>
 
-          <Route path = "/test">
+          <Route path="/test">
             <DetailsPage />
           </Route>
 
           <Route path="/">
             <HomePage />
           </Route>
-          
         </Switch>
       </Router>
     </div>

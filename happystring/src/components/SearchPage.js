@@ -270,7 +270,7 @@ export default function SearchPage(props) {
                 modalBody={BookModalBody}
                 component={CartBooks}
                 item={item}
-                fun={[props.fun.addToCart, props.fun.setCart]}
+                fun={[props.add, props.setCart]}
                 key={i}
               />
             ))}

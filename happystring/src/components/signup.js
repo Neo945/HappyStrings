@@ -278,6 +278,7 @@ function UserInfoSignup(params) {
   const classes = useStyles();
   const [phone, setPhone] = useState("");
   const [age, setAge] = useState(12);
+  const [address, setAddress] = useState("");
   return (
     <>
       <form
@@ -287,6 +288,7 @@ function UserInfoSignup(params) {
           const state = { ...params.state };
           state.age = age;
           state.phone = phone;
+          state.address = address;
           params.update(state);
           const response = await lookup("POST", state, "/auth/create");
           if (response[1] === 201) {
@@ -343,6 +345,19 @@ function UserInfoSignup(params) {
             setAge(parseInt(event.target.value));
           }}
         />
+        <TextField
+          className={classes.textField}
+          id="address"
+          required
+          fullWidth
+          variant="outlined"
+          label="Adress"
+          type="number"
+          value={address}
+          onChange={(event) => {
+            setAddress(event.target.value);
+          }}
+        />
         <FormControlLabel
           className={classes.remember}
           control={<Checkbox value="remember" color="primary" />}
@@ -374,6 +389,7 @@ export default function Signup() {
     password2: "",
     phone: "",
     username: "",
+    address: "",
     age: 0,
   });
   const [step, setStep] = useState(0);

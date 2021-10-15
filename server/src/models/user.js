@@ -108,6 +108,11 @@ const UserSchema = new Schema({
         type: Number,
         min: [12, 'Grow Up'],
     },
+    address: {
+        type: String,
+        trim: true,
+        minlength: 10,
+    },
     cart: [
         {
             type: Schema.Types.ObjectId,

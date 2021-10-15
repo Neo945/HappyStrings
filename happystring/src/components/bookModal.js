@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Fade, Modal, Box, Backdrop } from "@material-ui/core";
+import DetailsPage from "./modalBody/DetailsPage";
 
 const style = {
   position: "absolute",
@@ -8,7 +9,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: "80%",
   height: "80%",
-  bgcolor: "white",
+  bgcolor: "hsl(0deg 1% 16%)",
   outline: "none",
   boxShadow: 24,
   p: 4,
@@ -38,7 +39,7 @@ export default function BookModal(props) {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <props.modalBody item={props.item} />
+            <DetailsPage item={props.item} />
           </Box>
         </Fade>
       </Modal>
