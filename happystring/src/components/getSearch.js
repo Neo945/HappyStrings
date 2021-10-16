@@ -1,4 +1,5 @@
 import { Box, Typography } from "@material-ui/core";
+import BookModal from "./bookModal";
 import lookup from "./fetchData/lookup";
 
 async function getSearch(search, str, cls, fun) {
@@ -7,21 +8,34 @@ async function getSearch(search, str, cls, fun) {
   console.log(books);
   for (const i of books[0].books) {
     divList.push(
-      <Box
+      <BookModal
+        item={{ book: i }}
         key={i.id}
-        display="flex"
-        alignItems="center"
-        margin="10px"
-        onClick={(e) => {
-          e.preventDefault();
-          fun(i.title);
+        component={function (props) {
+          return (
+            <Box
+              style={{
+                cursor: "pointer",
+                pointerEvents: "all",
+              }}
+              key={i.id}
+              display="flex"
+              alignItems="center"
+              margin="10px"
+              onClick={(e) => {
+                e.preventDefault();
+                props.handleOpen();
+                // fun(i.title);
+              }}
+            >
+              <div className={cls} />
+              <Typography
+                style={{ margin: "10px" }}
+              >{`${i.title} by ${i.author.name}`}</Typography>
+            </Box>
+          );
         }}
-      >
-        <div className={cls} />
-        <Typography
-          style={{ margin: "10px" }}
-        >{`${i.title} by ${i.author.name}`}</Typography>
-      </Box>,
+      />,
     );
   }
   return divList;

@@ -9,7 +9,6 @@ import {
   OrderPage,
   CartV2,
   SearchPage,
-  DetailsPage,
 } from "./components";
 import {
   BrowserRouter as Router,

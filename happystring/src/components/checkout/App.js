@@ -86,7 +86,7 @@ function InputData(props) {
     cardNumber: "",
     expiry: "",
     cvc: "",
-    address: "",
+    address: JSON.parse(localStorage.getItem("user")).address,
     cardname: "",
   });
   const {
@@ -102,20 +102,21 @@ function InputData(props) {
       <form
         onSubmit={async (event) => {
           event.preventDefault();
-          const res = lookup(
-            "POST",
-            {
-              information,
-              cart: props.books,
-            },
-            "/api/checkout",
-          );
-          if (res[1] === 201) {
-            props.fun(1, res[0].message);
-          } else {
-            props.fun(1, res[0].message);
-            alert("Something went wrong");
-          }
+          // const res = lookup(
+          //   "POST",
+          //   {
+          //     information,
+          //     cart: props.books,
+          //   },
+          //   "/api/checkout",
+          // );
+          // if (res[1] === 201) {
+          //   props.fun(1, res[0].message);
+          // } else {
+          //   props.fun(1, res[0].message);
+          //   alert("Something went wrong");
+          // }
+          console.log(information);
         }}
       >
         <Grid container spacing={2}>
@@ -166,43 +167,43 @@ function InputData(props) {
               />
               <input
                 required
-                value={information.cardNumber}
-                onChange={(e) => {
-                  setInformation({
-                    ...information,
-                    cardNumber: e.target.value,
-                  });
-                }}
                 style={{
                   backgroundColor: "#424242",
                   width: "65%",
                   marginRight: "10%",
                 }}
-                {...getCardNumberProps()}
+                {...getCardNumberProps({
+                  onChange: (value) => {
+                    setInformation({
+                      ...information,
+                      cardNumber: value.target.value,
+                    });
+                  },
+                })}
               />
               <input
                 required
-                value={information.expiry}
-                onChange={(e) => {
-                  setInformation({
-                    ...information,
-                    expiry: e.target.value,
-                  });
-                }}
                 style={{ backgroundColor: "#424242" }}
-                {...getExpiryDateProps()}
+                {...getExpiryDateProps({
+                  onChange: (value) => {
+                    setInformation({
+                      ...information,
+                      expiry: value.target.value,
+                    });
+                  },
+                })}
               />
               <input
                 required
-                value={information.cvc}
-                onChange={(e) => {
-                  setInformation({
-                    ...information,
-                    cvc: e.target.value,
-                  });
-                }}
                 style={{ backgroundColor: "#424242" }}
-                {...getCVCProps()}
+                {...getCVCProps({
+                  onChange: (value) => {
+                    setInformation({
+                      ...information,
+                      cvc: value.target.value,
+                    });
+                  },
+                })}
               />
             </PaymentInputsWrapper>
           </Grid>
