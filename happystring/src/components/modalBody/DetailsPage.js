@@ -56,7 +56,7 @@ function DetailsPage(props) {
           <ReactImageMagnify
             {...{
               smallImage: {
-                alt: props.item.name,
+                alt: props.item.book.name,
                 isFluidWidth: true,
                 src: "https://cdn4.buysellads.net/uu/1/97758/1633132110-1633110694-158338930.jpg",
               },
@@ -81,6 +81,7 @@ function DetailsPage(props) {
               className={classes.submit}
               type="submit"
               variant="contained"
+              onClick={() => props.add(props.setCart, props.item.book)}
             >
               Add to Cart
             </Button>
@@ -89,6 +90,10 @@ function DetailsPage(props) {
               className={classes.submit}
               type="submit"
               variant="contained"
+              onClick={() => {
+                localStorage.setItem("purchase", JSON.stringify([props.item]));
+                window.location.href = "/checkout";
+              }}
             >
               Buy Now
             </Button>
@@ -108,10 +113,10 @@ function DetailsPage(props) {
           <CardContent>
             <div>
               <Book
-                name={props.item.title}
-                price={props.item.price}
-                description={props.item.description}
-                author={props.item.author.name}
+                name={props.item.book.title}
+                price={props.item.book.price}
+                description={props.item.book.description}
+                author={props.item.book.author.name}
               />
             </div>
             <br />

@@ -71,8 +71,8 @@ function CartBooks(props) {
             <Button
               className={classes.submit}
               variant="contained"
-              onCLick={() => {
-                props.fun[0](props.item._id, props.fun[1]);
+              onClick={() => {
+                props.add(props.setCart, props.item);
               }}
             >
               Add to Cart
@@ -81,17 +81,6 @@ function CartBooks(props) {
         </Box>
       </Item>
     </Grid>
-  );
-}
-
-function BookModalBody(props) {
-  return (
-    <>
-      <Typography id="transition-modal-title" variant="h6" component="h2">
-        {"props.item.title"}
-      </Typography>
-      <Typography id="transition-modal-description" sx={{ mt: 2 }}></Typography>
-    </>
   );
 }
 
@@ -267,10 +256,10 @@ export default function SearchPage(props) {
           >
             {books.map((item, i) => (
               <BookModal
-                modalBody={BookModalBody}
                 component={CartBooks}
-                item={item}
-                fun={[props.add, props.setCart]}
+                item={{ book: item }}
+                add={props.add}
+                setCart={props.setCart}
                 key={i}
               />
             ))}

@@ -94,7 +94,7 @@ const HomePageBook = (props) => {
   );
 };
 
-export default function HomePage() {
+export default function HomePage({ cart, add, setCart, remove }) {
   const classes = useStyle();
   const [book1, setBook1] = useState([]);
   const [book2, setBook2] = useState([]);
@@ -170,7 +170,15 @@ export default function HomePage() {
                 className="hs trending"
               >
                 {ele[1].map((book, i) => (
-                  <BookModal key={i} component={HomePageBook} item={book} />
+                  <BookModal
+                    key={i}
+                    component={HomePageBook}
+                    item={book}
+                    cart={cart}
+                    add={add}
+                    setCart={setCart}
+                    remove={remove}
+                  />
                 ))}
               </div>
             </Box>

@@ -113,12 +113,6 @@ const UserSchema = new Schema({
         trim: true,
         minlength: 10,
     },
-    cart: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Cart',
-        },
-    ],
     wishlist: [
         {
             type: Schema.Types.ObjectId,

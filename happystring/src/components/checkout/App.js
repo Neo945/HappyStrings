@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { css } from "styled-components";
 import {
   Box,
@@ -102,10 +102,14 @@ function InputData(props) {
       <form
         onSubmit={async (event) => {
           event.preventDefault();
-          const res = lookup("POST", "/api/checkout", {
-            information,
-            cart: props.books,
-          });
+          const res = lookup(
+            "POST",
+            {
+              information,
+              cart: props.books,
+            },
+            "/api/checkout",
+          );
           if (res[1] === 201) {
             props.fun(1, res[0].message);
           } else {
@@ -263,10 +267,10 @@ function CartBooks(props) {
         />
         <Box>
           <Typography variant="h5" style={{ marginTop: "10px" }} align="left">
-            {props.item.title}
+            {props.item.book.title}
           </Typography>
           <Typography variant="h6" style={{ marginTop: "10px" }} align="left">
-            {props.item.description}
+            {props.item.book.description}
           </Typography>
         </Box>
         <Typography
@@ -274,7 +278,7 @@ function CartBooks(props) {
           style={{ position: "absolute", right: "4%", marginTop: "10px" }}
           align="left"
         >
-          {`₹${props.item.price}`}
+          {`₹${props.item.book.price}`}
         </Typography>
       </Item>
     </Grid>
@@ -290,6 +294,7 @@ function getPrice(cart) {
 }
 
 export default function Checkout(props) {
+  const cart = JSON.parse(localStorage.getItem("purchase"));
   const classes = useStyle();
   const [status, setStatus] = useState({ status: 0, message: "" });
   return (
@@ -322,7 +327,7 @@ export default function Checkout(props) {
                   width: "70vw",
                 }}
               >
-                {props.books?.map((item, i) => (
+                {cart?.map((item, i) => (
                   <BookModal component={CartBooks} item={item} key={i} />
                 ))}
               </Grid>
@@ -347,8 +352,8 @@ export default function Checkout(props) {
                       <TableBody>
                         {[
                           {
-                            rowName: `Price (${props.books?.length} items)`,
-                            value: `₹${getPrice(props.books)}`,
+                            rowName: `Price (${cart?.length} items)`,
+                            value: `₹${getPrice(cart)}`,
                           },
                           {
                             rowName: `Total Amount`,

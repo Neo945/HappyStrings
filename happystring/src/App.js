@@ -15,21 +15,30 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect,
+  // Redirect,
 } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import { useState, useEffect } from "react";
 import lookup from "./components/fetchData/lookup";
 
 function addToCart(setCart, book) {
-  lookup("POST", { book }, "/user/add/cart").then((data) => {
+  lookup("POST", book, "/auth/add/cart").then((data) => {
     setCart(data[0].cart);
   });
 }
 function removeFromCart(setCart, book) {
-  lookup("POST", { book }, "/user/remove/cart").then((data) => {
+  lookup("POST", book, "/auth/remove/cart").then((data) => {
     setCart(data[0].cart);
   });
+}
+function removeAllFromCart(setCart, book) {
+  lookup("POST", book, "/auth/remove/all/cart").then((data) => {
+    setCart(data[0].cart);
+  });
+}
+
+function addToPurchase(books) {
+  localStorage.setItem("purchase", JSON.stringify(books));
 }
 
 function App() {
@@ -48,10 +57,11 @@ function App() {
   }))();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [cart, setCart] = useState([]);
-  const [payment, setPayment] = useState([]);
   useEffect(() => {
+    if (window.location.pathname !== "/checkout")
+      localStorage.removeItem("purchase");
     if (user === null) {
-      lookup("GET", null, "/user/get").then((data) => {
+      lookup("GET", null, "/auth/get").then((data) => {
         if (data[0].user) {
           localStorage.setItem("user", JSON.stringify(data[0].user));
           setUser(data[0].user);
@@ -60,16 +70,19 @@ function App() {
           setUser(null);
         }
       });
-      lookup("GET", null, "/user/cart").then((data) => {
-        setCart(data[0].cart);
-      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    lookup("GET", null, "/auth/cart").then((data) => {
+      setCart(data[0].cart);
+    });
+  }, []);
+  console.log(cart, user);
   return (
     <div>
       <Router>
-        <Navbar />
+        <Navbar totalItems={cart.length} />
         <Switch>
           <Route path="/login">
             <Login />
@@ -78,11 +91,7 @@ function App() {
             <Signup />
           </Route>
           <Route path="/checkout">
-            {user ? (
-              <Checkout books={payment} />
-            ) : (
-              <Checkout to="/login" books={payment} />
-            )}
+            {user ? <Checkout /> : <Checkout to="/login" />}
           </Route>
           <Route path="/cart">
             {user ? (
@@ -91,7 +100,8 @@ function App() {
                 add={addToCart}
                 setCart={setCart}
                 remove={removeFromCart}
-                setPayment={setPayment}
+                removeAll={removeAllFromCart}
+                buyNow={addToPurchase}
               />
             ) : (
               //<Redirect to="/login" />
@@ -100,7 +110,8 @@ function App() {
                 add={addToCart}
                 setCart={setCart}
                 remove={removeFromCart}
-                setPayment={setPayment}
+                removeAll={removeAllFromCart}
+                buyNow={addToPurchase}
               />
             )}
           </Route>
@@ -108,19 +119,25 @@ function App() {
             <SearchPage
               add={addToCart}
               setCart={setCart}
-              setPayment={setPayment}
+              buyNow={addToPurchase}
             />
           </Route>
           <Route path="/order">
             <OrderPage />
           </Route>
 
-          <Route path="/test">
+          {/* <Route path="/test">
             <DetailsPage />
-          </Route>
+          </Route> */}
 
           <Route path="/">
-            <HomePage />
+            <HomePage
+              cart={cart}
+              add={addToCart}
+              setCart={setCart}
+              remove={removeFromCart}
+              buyNow={addToPurchase}
+            />
           </Route>
         </Switch>
       </Router>

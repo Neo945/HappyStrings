@@ -8,9 +8,7 @@ import {
   Container,
   IconButton,
   InputAdornment,
-  FormControlLabel,
   Box,
-  Checkbox,
 } from "@material-ui/core";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import OauthButton from "./oauthButton";
@@ -181,7 +179,7 @@ function PasswordSignup(params) {
       state.password2 = cPass;
       params.update(state);
       const response = await lookup("POST", state, "/auth/register");
-      if (response[1] === 201) {
+      if (response[1] === 201 || response[1] === 200) {
         params.fun(2);
       } else {
         alert(response[0].message);
@@ -337,6 +335,7 @@ function UserInfoSignup(params) {
           id="age"
           required
           fullWidth
+          name="age"
           variant="outlined"
           label="Age"
           type="number"
@@ -349,19 +348,14 @@ function UserInfoSignup(params) {
           className={classes.textField}
           id="address"
           required
+          name="name"
           fullWidth
           variant="outlined"
           label="Adress"
-          type="number"
           value={address}
           onChange={(event) => {
             setAddress(event.target.value);
           }}
-        />
-        <FormControlLabel
-          className={classes.remember}
-          control={<Checkbox value="remember" color="primary" />}
-          label="Remember me"
         />
         <Container className={classes.container}>
           <IconButton aria-label="back" onClick={() => params.fun(1)}>

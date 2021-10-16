@@ -6,10 +6,17 @@ const CartSchema = new Schema({
     book: {
         type: Schema.Types.ObjectId,
         ref: 'Book',
+        required: true,
     },
     quantity: {
         type: Number,
         default: 1,
+        required: true,
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
     },
 });
 

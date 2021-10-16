@@ -41,19 +41,6 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-function BookModalBody() {
-  return (
-    <>
-      <Typography id="transition-modal-title" variant="h6" component="h2">
-        Text in a modal
-      </Typography>
-      <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-      </Typography>
-    </>
-  );
-}
-
 function CartBooks(props) {
   const classes = useStyle();
   return (
@@ -81,7 +68,7 @@ function CartBooks(props) {
               <IconButton
                 aria-label="add"
                 onClick={() => {
-                  props.fun[2](props.fun[1], props.item.book._id);
+                  props.add(props.setCart, props.item.book);
                 }}
               >
                 <AddIcon />
@@ -90,13 +77,19 @@ function CartBooks(props) {
               <IconButton
                 aria-label="remove"
                 onClick={() => {
-                  props.fun[2](props.fun[0], props.item.book._id);
+                  props.remove(props.setCart, props.item.book);
                 }}
               >
                 <RemoveIcon />
               </IconButton>
             </Box>
-            <Button className={classes.submit} variant="contained">
+            <Button
+              className={classes.submit}
+              variant="contained"
+              onClick={() => {
+                props.removeAll(props.setCart, props.item.book);
+              }}
+            >
               Remove
             </Button>
           </Box>
@@ -107,6 +100,7 @@ function CartBooks(props) {
 }
 
 function getPrice(cart) {
+  console.log(cart);
   let price = 0;
   cart.forEach((ele) => {
     price += ele.book.price * ele.quantity;
@@ -115,6 +109,7 @@ function getPrice(cart) {
 }
 
 export default function CartV2(props) {
+  const classes = useStyle();
   return (
     <div>
       <Box height="70px" />
@@ -146,10 +141,12 @@ export default function CartV2(props) {
             {props.cart.map((item, i) => (
               <BookModal
                 component={CartBooks}
-                modalBody={BookModalBody}
                 item={item}
-                fun={[props.removeFromCart, props.setCart, props.addToCart]}
+                add={props.add}
+                setCart={props.setCart}
+                remove={props.remove}
                 key={i}
+                removeAll={props.removeAll}
               />
             ))}
           </Grid>
@@ -220,6 +217,20 @@ export default function CartV2(props) {
                 <Typography style={{ margin: "10px" }}>
                   You will save ₹700 on this order
                 </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  onClick={() => {
+                    localStorage.setItem(
+                      "purchase",
+                      JSON.stringify(props.cart),
+                    );
+                    window.location.href = "/checkout";
+                  }}
+                >
+                  Place Order
+                </Button>
               </Box>
             </Paper>
           </Box>

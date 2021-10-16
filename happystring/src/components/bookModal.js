@@ -19,12 +19,16 @@ export default function BookModal(props) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  console.log(props.add);
   return (
     <>
       <props.component
         handleOpen={handleOpen}
-        fun={props.fun}
+        add={props.add}
+        setCart={props.setCart}
+        remove={props.remove}
         item={props.item}
+        removeAll={props.removeAll}
       />
       <Modal
         aria-labelledby="transition-modal-title"
@@ -39,7 +43,13 @@ export default function BookModal(props) {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <DetailsPage item={props.item} />
+            <DetailsPage
+              item={props.item}
+              cart={props.cart}
+              add={props.add}
+              setCart={props.setCart}
+              remove={props.remove}
+            />
           </Box>
         </Fade>
       </Modal>
