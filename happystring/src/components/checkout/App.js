@@ -102,20 +102,20 @@ function InputData(props) {
       <form
         onSubmit={async (event) => {
           event.preventDefault();
-          // const res = lookup(
-          //   "POST",
-          //   {
-          //     information,
-          //     cart: props.books,
-          //   },
-          //   "/api/checkout",
-          // );
-          // if (res[1] === 201) {
-          //   props.fun(1, res[0].message);
-          // } else {
-          //   props.fun(1, res[0].message);
-          //   alert("Something went wrong");
-          // }
+          const res = lookup(
+            "POST",
+            {
+              information,
+              cart: props.books,
+            },
+            "/auth/checkout",
+          );
+          if (res[1] === 201) {
+            props.fun(1, res[0].message);
+          } else {
+            props.fun(1, res[0].message);
+            alert("Something went wrong");
+          }
           console.log(information);
         }}
       >

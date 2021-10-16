@@ -6,6 +6,7 @@ const Purchase = require('../models/purchase');
 const Order = require('../models/Order');
 const { errorHandler } = require('../utils/errorHandler');
 const transport = require('../config/mailer.config');
+const Card = require('../models/creditCard');
 
 module.exports = {
     getUser: (req, res) => {
@@ -162,15 +163,20 @@ module.exports = {
         errorHandler(
             req,
             res,
+            // eslint-disable-next-line consistent-return
             async () => {
+                if (!(await Card.varify(req.body.infomation.cvv, req.user._id, req.body.infomation.cardNumber))) {
+                    return res.status(403).json({ message: 'Card is not verified' });
+                }
                 const user = await User.findOne({ user: req.user._id });
                 const orderlist = [];
                 // eslint-disable-next-line no-restricted-syntax
                 for (const book of user.cart) {
-                    const bookToPurchase = await Book.findById(book._id);
-                    bookToPurchase.stock -= 1;
+                    const bookToPurchase = await Book.findById(book.book._id);
+                    if (bookToPurchase.stock - book.quantity >= 0) bookToPurchase.stock -= book.quantity;
+                    else return res.status(400).json({ message: 'Not enough stock' });
                     await bookToPurchase.save();
-                    const purchase = await Purchase.create({ user: user._id, book: book._id, quantity: req.body.quantity });
+                    const purchase = await Purchase.create({ user: user._id, book: book.book._id, quantity: book.quantity });
                     const order = await Order.create({ user: user._id, purchase: purchase._id });
                     orderlist.push(order._id);
                 }
