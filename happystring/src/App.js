@@ -19,7 +19,10 @@ import {
 import { makeStyles } from "@material-ui/core";
 import { useState, useEffect } from "react";
 import OrderPage from "./OrderPage";
-import SearchPage from "./SearchPage"
+import SearchPage from "./SearchPage";
+import DetailsPage from "./DetailsPage";
+import SuccessPage from "./SuccessPage";
+import OrderDetailsPage from "./OrderDetailsPage";
 
 function App() {
   makeStyles((theme) => ({
@@ -80,7 +83,7 @@ function App() {
             {user ? <CartV2 /> : <Redirect to="/login" />}
           </Route>
           <Route path="/test">
-            <SearchPage/>
+            <OrderDetailsPage />
           </Route>
           <Route path="/">
             {user ? <HomePage /> : <Redirect to="/login" />}
