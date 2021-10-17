@@ -1,50 +1,42 @@
 import { Box, Typography } from "@material-ui/core";
+import BookModal from "./bookModal";
+import lookup from "./fetchData/lookup";
 
-const books = [
-  {
-    title: "The Lord of the Rings",
-    id: 1,
-  },
-  {
-    title: "The Hobbit",
-    id: 2,
-  },
-  {
-    title: "The Catcher in the Rye",
-    id: 3,
-  },
-  {
-    title: "The Hunger Games",
-    id: 4,
-  },
-  {
-    title: "The Fault in Our Stars",
-    id: 5,
-  },
-];
-
-function getSearch(str, cls, fun) {
+async function getSearch(search, str, cls, fun) {
   const divList = [];
-  for (const i of books) {
-    if (i.title.toLowerCase().includes(str.toLowerCase())) {
-      divList.push(
-        <Box
-          key={i.id}
-          display="flex"
-          alignItems="center"
-          margin="10px"
-          onClick={(e) => {
-            e.preventDefault();
-            fun(i.title);
-          }}
-        >
-          <div className={cls} />
-          <Typography
-            style={{ margin: "10px" }}
-          >{`${i.title} by ${i.aurthor}`}</Typography>
-        </Box>,
-      );
-    }
+  const books = await lookup("GET", null, `/book/search/1?search=${str}`);
+  console.log(books);
+  for (const i of books[0].books) {
+    divList.push(
+      <BookModal
+        item={{ book: i }}
+        key={i.id}
+        component={function (props) {
+          return (
+            <Box
+              style={{
+                cursor: "pointer",
+                pointerEvents: "all",
+              }}
+              key={i.id}
+              display="flex"
+              alignItems="center"
+              margin="10px"
+              onClick={(e) => {
+                e.preventDefault();
+                props.handleOpen();
+                // fun(i.title);
+              }}
+            >
+              <div className={cls} />
+              <Typography
+                style={{ margin: "10px" }}
+              >{`${i.title} by ${i.author.name}`}</Typography>
+            </Box>
+          );
+        }}
+      />,
+    );
   }
   return divList;
 }

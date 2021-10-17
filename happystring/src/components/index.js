@@ -3,8 +3,19 @@ import Navbar from "./Navbar";
 import Signup from "./signup";
 import HomePage from "./homepage";
 import Checkout from "./checkout/App";
-import Payment from "./payment/App";
-import Cart from "./cart/App";
 import CartV2 from "./cart";
+import SearchPage from "./SearchPage";
+import OrderPage from "./OrderPage/OrderPage";
+import DetailsPage from "./modalBody/DetailsPage";
 
-export { Login, Navbar, Signup, HomePage, Checkout, Payment, Cart, CartV2 };
+export {
+  OrderPage,
+  SearchPage,
+  Login,
+  Navbar,
+  Signup,
+  HomePage,
+  Checkout,
+  CartV2,
+  DetailsPage,
+};

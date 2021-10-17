@@ -18,79 +18,6 @@ import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import BookModal from "./bookModal";
 
-const cart = [
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 1,
-    name: "Product 1",
-    price: "10",
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 2,
-    name: "Product 2",
-    price: "10",
-    quantity: 2,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 3,
-    name: "Product 3",
-    price: "10",
-    quantity: 3,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 4,
-    name: "Product 4",
-    price: "10",
-    quantity: 4,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 5,
-    name: "Product 5",
-    price: "10",
-    quantity: 5,
-    image: "https://picsum.photos/200/300",
-  },
-];
-
 const useStyle = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -114,19 +41,6 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-function BookModalBody() {
-  return (
-    <>
-      <Typography id="transition-modal-title" variant="h6" component="h2">
-        Text in a modal
-      </Typography>
-      <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-      </Typography>
-    </>
-  );
-}
-
 function CartBooks(props) {
   const classes = useStyle();
   return (
@@ -137,12 +51,12 @@ function CartBooks(props) {
           style={{
             width: "100%",
             height: "60%",
-            background: `url(${props.item.image}) no-repeat center center`,
+            background: `url(${props.item.book.image}) no-repeat center center`,
             backgroundSize: "cover",
           }}
         />
         <Typography variant="h5" style={{ marginTop: "10px" }} align="left">
-          {props.item.name}
+          {props.item.book.name}
         </Typography>
         <Box position="absolute" bottom="10px" width="90%">
           <Box
@@ -151,15 +65,31 @@ function CartBooks(props) {
             alignItems="center"
           >
             <Box display="flex" alignItems="center">
-              <IconButton aria-label="add">
+              <IconButton
+                aria-label="add"
+                onClick={() => {
+                  props.add(props.setCart, props.item.book);
+                }}
+              >
                 <AddIcon />
               </IconButton>
-              <Typography>{0}</Typography>
-              <IconButton aria-label="add">
+              <Typography>{props.item.quantity}</Typography>
+              <IconButton
+                aria-label="remove"
+                onClick={() => {
+                  props.remove(props.setCart, props.item.book);
+                }}
+              >
                 <RemoveIcon />
               </IconButton>
             </Box>
-            <Button className={classes.submit} variant="contained">
+            <Button
+              className={classes.submit}
+              variant="contained"
+              onClick={() => {
+                props.removeAll(props.setCart, props.item.book);
+              }}
+            >
               Remove
             </Button>
           </Box>
@@ -169,7 +99,17 @@ function CartBooks(props) {
   );
 }
 
+function getPrice(cart) {
+  console.log(cart);
+  let price = 0;
+  cart.forEach((ele) => {
+    price += ele.book.price * ele.quantity;
+  });
+  return price;
+}
+
 export default function CartV2(props) {
+  const classes = useStyle();
   return (
     <div>
       <Box height="70px" />
@@ -198,12 +138,15 @@ export default function CartV2(props) {
               width: "70vw",
             }}
           >
-            {cart.map((item, i) => (
+            {props.cart.map((item, i) => (
               <BookModal
                 component={CartBooks}
-                modalBody={BookModalBody}
                 item={item}
+                add={props.add}
+                setCart={props.setCart}
+                remove={props.remove}
                 key={i}
+                removeAll={props.removeAll}
               />
             ))}
           </Grid>
@@ -229,8 +172,8 @@ export default function CartV2(props) {
                     <TableBody>
                       {[
                         {
-                          rowName: `Price (${cart.length} items)`,
-                          value: `₹91,989`,
+                          rowName: `Price (${props.cart.length} items)`,
+                          value: `₹${getPrice(props.cart)}`,
                         },
                         {
                           rowName: `Discounts`,
@@ -242,7 +185,7 @@ export default function CartV2(props) {
                         },
                         {
                           rowName: `Total Amount`,
-                          value: `₹91,989`,
+                          value: `₹${getPrice(props.cart) - 700}`,
                           component: "h4",
                         },
                       ].map((row, i) => (
@@ -274,6 +217,20 @@ export default function CartV2(props) {
                 <Typography style={{ margin: "10px" }}>
                   You will save ₹700 on this order
                 </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  onClick={() => {
+                    localStorage.setItem(
+                      "purchase",
+                      JSON.stringify(props.cart),
+                    );
+                    window.location.href = "/checkout";
+                  }}
+                >
+                  Place Order
+                </Button>
               </Box>
             </Paper>
           </Box>

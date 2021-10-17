@@ -8,9 +8,7 @@ import {
   Container,
   IconButton,
   InputAdornment,
-  FormControlLabel,
   Box,
-  Checkbox,
 } from "@material-ui/core";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import OauthButton from "./oauthButton";
@@ -84,12 +82,14 @@ const useStyles = makeStyles((theme) => {
 
 function EmailInputSignup(params) {
   const classes = useStyles();
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   function formHandle(event) {
     event.preventDefault();
     if (isEmail(email)) {
       params.fun(1);
       const state = { ...params.state };
+      state.username = username;
       state.email = email;
       params.update(state);
     } else {
@@ -126,6 +126,26 @@ function EmailInputSignup(params) {
           autoComplete="email"
           className={classes.textField}
         />
+        <TextField
+          className={classes.textField}
+          id="username"
+          fullWidth
+          required
+          variant="outlined"
+          label="Userame"
+          value={
+            params.state.username === "" ? username : params.state.username
+          }
+          onChange={(event) => {
+            if (params.state.password !== "") {
+              const state = { ...params.state };
+              state.username = "";
+              params.update(state);
+            }
+            setUsername(event.target.value);
+          }}
+        />
+
         <Typography
           style={{ color: "gray", fontSize: "0.75em", margin: "5px" }}
         >
@@ -158,8 +178,8 @@ function PasswordSignup(params) {
       state.password = pass;
       state.password2 = cPass;
       params.update(state);
-      const response = await lookup("POST", "/api/register", params.state);
-      if (response[1] === 201) {
+      const response = await lookup("POST", state, "/auth/register");
+      if (response[1] === 201 || response[1] === 200) {
         params.fun(2);
       } else {
         alert(response[0].message);
@@ -254,20 +274,21 @@ function PasswordSignup(params) {
 }
 function UserInfoSignup(params) {
   const classes = useStyles();
-  const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
   const [age, setAge] = useState(12);
+  const [address, setAddress] = useState("");
   return (
     <>
       <form
         className={classes.form}
         onSubmit={async (event) => {
+          event.preventDefault();
           const state = { ...params.state };
-          state.username = username;
           state.age = age;
           state.phone = phone;
+          state.address = address;
           params.update(state);
-          const response = await lookup("POST", "/api/create", params.state);
+          const response = await lookup("POST", state, "/auth/create");
           if (response[1] === 201) {
             window.location.href = "/";
           } else {
@@ -276,25 +297,6 @@ function UserInfoSignup(params) {
           event.preventDefault();
         }}
       >
-        <TextField
-          className={classes.textField}
-          id="username"
-          fullWidth
-          required
-          variant="outlined"
-          label="Userame"
-          value={
-            params.state.username === "" ? username : params.state.username
-          }
-          onChange={(event) => {
-            if (params.state.password !== "") {
-              const state = { ...params.state };
-              state.username = "";
-              params.update(state);
-            }
-            setUsername(event.target.value);
-          }}
-        />
         <TextField
           className={classes.textField}
           id="phone"
@@ -333,6 +335,7 @@ function UserInfoSignup(params) {
           id="age"
           required
           fullWidth
+          name="age"
           variant="outlined"
           label="Age"
           type="number"
@@ -341,10 +344,18 @@ function UserInfoSignup(params) {
             setAge(parseInt(event.target.value));
           }}
         />
-        <FormControlLabel
-          className={classes.remember}
-          control={<Checkbox value="remember" color="primary" />}
-          label="Remember me"
+        <TextField
+          className={classes.textField}
+          id="address"
+          required
+          name="name"
+          fullWidth
+          variant="outlined"
+          label="Adress"
+          value={address}
+          onChange={(event) => {
+            setAddress(event.target.value);
+          }}
         />
         <Container className={classes.container}>
           <IconButton aria-label="back" onClick={() => params.fun(1)}>
@@ -372,6 +383,7 @@ export default function Signup() {
     password2: "",
     phone: "",
     username: "",
+    address: "",
     age: 0,
   });
   const [step, setStep] = useState(0);

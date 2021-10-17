@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Fade, Modal, Box, Backdrop } from "@material-ui/core";
+import DetailsPage from "./modalBody/DetailsPage";
 
 const style = {
   position: "absolute",
@@ -8,7 +9,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: "80%",
   height: "80%",
-  bgcolor: "white",
+  bgcolor: "hsl(0deg 1% 16%)",
   outline: "none",
   boxShadow: 24,
   p: 4,
@@ -18,9 +19,17 @@ export default function BookModal(props) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  console.log(props.add);
   return (
     <>
-      <props.component handleOpen={handleOpen} item={props.item} />
+      <props.component
+        handleOpen={handleOpen}
+        add={props.add}
+        setCart={props.setCart}
+        remove={props.remove}
+        item={props.item}
+        removeAll={props.removeAll}
+      />
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -34,7 +43,13 @@ export default function BookModal(props) {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <props.modalBody item={props.item} />
+            <DetailsPage
+              item={props.item}
+              cart={props.cart}
+              add={props.add}
+              setCart={props.setCart}
+              remove={props.remove}
+            />
           </Box>
         </Fade>
       </Modal>

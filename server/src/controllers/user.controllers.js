@@ -1,9 +1,12 @@
+/* eslint-disable no-await-in-loop */
 const { User, BaseUser } = require('../models/user');
+const Cart = require('../models/cart');
 const Book = require('../models/book');
 const Purchase = require('../models/purchase');
 const Order = require('../models/Order');
 const { errorHandler } = require('../utils/errorHandler');
 const transport = require('../config/mailer.config');
+const Card = require('../models/creditCard');
 
 module.exports = {
     getUser: (req, res) => {
@@ -14,12 +17,19 @@ module.exports = {
     },
     createUserForBaseUser: (req, res) => {
         errorHandler(req, res, async () => {
-            const newAccount = await User.create({ ...req.body, user: req.user._id });
+            const newAccount = await User.create({
+                ...req.body,
+                user: (await BaseUser.findOne({ email: req.body.email }))._id,
+            });
             res.status(201).json({ message: 'success', user: newAccount });
         });
     },
     registerUser: (req, res) => {
+        // eslint-disable-next-line consistent-return
         errorHandler(req, res, async () => {
+            if (await BaseUser.exists({ email: req.body.email })) {
+                return res.status(200).json({ message: 'Email already exists' });
+            }
             const newUser = await BaseUser.create({ ...req.body });
             res.status(201).json({ message: 'success', user: { ...newUser, password: null } });
         });
@@ -30,7 +40,7 @@ module.exports = {
             const token = await BaseUser.login(email, password);
             if (token) {
                 res.cookie('jwt', token, {
-                    maxAge: require('../config/config').TOKEN_LENGTH,
+                    maxAge: 259200000,
                 });
                 const user = await BaseUser.findOne({ email });
                 res.status(201).json({
@@ -89,8 +99,51 @@ module.exports = {
             req,
             res,
             async () => {
-                const user = await User.findOneAndUpdate({ user: req.user._id }, { $push: { cart: req.params.id } });
-                res.status(200).json(user);
+                console.log(req.body);
+                if (await Cart.exists({ user: req.user._id, book: req.body._id })) {
+                    const cart = await Cart.findOne({ user: req.user._id, book: req.body._id });
+                    cart.quantity += 1;
+                    await cart.save();
+                } else {
+                    await Cart.create({
+                        user: req.user._id,
+                        book: req.body._id,
+                        quantity: 1,
+                    });
+                }
+                const cart = await Cart.find({ user: req.user._id }).populate('book');
+                res.status(200).json({ message: 'success', cart });
+            },
+            500
+        );
+    },
+    removeAllFromCart: async (req, res) => {
+        errorHandler(
+            req,
+            res,
+            async () => {
+                const cart = await Cart.findOne({ user: req.user._id, book: req.body._id });
+                await cart.remove();
+                const updatedCart = await Cart.find({ user: req.user._id }).populate('book');
+                res.status(200).json({ message: 'success', cart: updatedCart });
+            },
+            500
+        );
+    },
+    removeFromCart: async (req, res) => {
+        errorHandler(
+            req,
+            res,
+            async () => {
+                const cart = await Cart.findOne({ user: req.user._id, book: req.body._id });
+                if (cart.quantity > 1) {
+                    cart.quantity -= 1;
+                    await cart.save();
+                } else {
+                    await cart.remove();
+                }
+                const updatedCart = await Cart.find({ user: req.user._id }).populate('book');
+                res.status(200).json({ message: 'success', cart: updatedCart });
             },
             500
         );
@@ -110,14 +163,24 @@ module.exports = {
         errorHandler(
             req,
             res,
+            // eslint-disable-next-line consistent-return
             async () => {
+                if (!(await Card.varify(req.body.infomation.cvv, req.user._id, req.body.infomation.cardNumber))) {
+                    return res.status(403).json({ message: 'Card is not verified' });
+                }
                 const user = await User.findOne({ user: req.user._id });
-                const book = await Book.findOne({ _id: req.body.id });
-                book.stock -= req.body.quantity;
-                await book.save();
-                const purchase = await Purchase.create({ user: user._id, book: book._id, quantity: req.body.quantity });
-                const order = await Order.create({ user: user._id, purchase: purchase._id });
-                res.status(200).json({ message: 'success', order });
+                const orderlist = [];
+                // eslint-disable-next-line no-restricted-syntax
+                for (const book of user.cart) {
+                    const bookToPurchase = await Book.findById(book.book._id);
+                    if (bookToPurchase.stock - book.quantity >= 0) bookToPurchase.stock -= book.quantity;
+                    else return res.status(400).json({ message: 'Not enough stock' });
+                    await bookToPurchase.save();
+                    const purchase = await Purchase.create({ user: user._id, book: book.book._id, quantity: book.quantity });
+                    const order = await Order.create({ user: user._id, purchase: purchase._id });
+                    orderlist.push(order._id);
+                }
+                res.status(201).json({ message: 'success', orderlist });
             },
             500
         );
@@ -126,9 +189,13 @@ module.exports = {
         errorHandler(
             req,
             res,
+            // eslint-disable-next-line consistent-return
             async () => {
-                const user = await User.findOne({ user: req.user._id }).populate('Book', '-_id -__v -stock');
-                res.status(200).json({ message: 'success', cart: { ...user.cart } });
+                if (req.user !== null) {
+                    const cart = await Cart.find({ user: req.user._id }).populate('book');
+                    return res.status(200).json({ message: 'success', cart });
+                }
+                res.status(401).json({ message: 'Unauthrized' });
             },
             500
         );
@@ -152,6 +219,21 @@ module.exports = {
                 const user = await User.findOne({ user: req.user._id });
                 const purchase = await Purchase.find({ user: user._id }).populate('Book', '-_id -__v -stock');
                 res.status(200).json({ message: 'success', purchase: { ...purchase } });
+            },
+            500
+        );
+    },
+    getOrder: async (req, res) => {
+        errorHandler(
+            req,
+            res,
+            async () => {
+                const user = await User.findOne({ user: req.user._id });
+                const order = await Order.find({ user: user._id })
+                    .populate('Purchase', '-_id')
+                    .populate('Book', '-_id -__v -stock')
+                    .populate('author', '-_id');
+                res.status(200).json({ message: 'success', order: { ...order } });
             },
             500
         );

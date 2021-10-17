@@ -20,5 +20,5 @@ AurthorSchema.post('remove', async (doc, next) => {
     next();
 });
 
-const Aurthor = mongoose.model('Aurthor', AurthorSchema);
-module.exports = Aurthor;
+const Author = mongoose.model('Author', AurthorSchema);
+module.exports = Author;

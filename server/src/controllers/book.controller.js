@@ -10,8 +10,9 @@ module.exports = {
             req,
             res,
             async () => {
-                const books = await Book.aggregate([{ $sample: { size: 10 } }]);
-                res.json(books);
+                let books = await Book.aggregate([{ $sample: { size: 10 } }]);
+                books = await Book.populate(books, { path: 'author' });
+                res.status(200).json(books);
             },
             500
         );
@@ -87,7 +88,9 @@ module.exports = {
                         { aurthor: { $regex: req.query.search, $options: 'i' } },
                         { category: { $regex: req.query.search, $options: 'i' } },
                     ],
-                }).limit(10 * req.params.page);
+                })
+                    .limit(10 * parseInt(req.params.page, 10))
+                    .populate('author');
                 res.status(200).json({ books });
             },
             500
@@ -104,7 +107,7 @@ module.exports = {
                     author: author.id ? author.id : (await Aurthor.create({ ...author }))._id,
                     shop: shop.id ? shop.id : (await Shop.create({ ...shop }))._id,
                 });
-                res.status(201).json(newBook);
+                res.status(201).json({ book: await newBook.populate('Author').populate('Shop') });
             },
             500
         );

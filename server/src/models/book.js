@@ -1,7 +1,7 @@
 /* eslint-disable no-return-await */
 const mongoose = require('mongoose');
 const validator = require('validator').default;
-const Aurthor = require('./aurthor');
+const Author = require('./aurthor');
 const Shop = require('./shop');
 
 const { Schema } = mongoose;
@@ -21,17 +21,36 @@ const BookSchema = new Schema(
             type: String,
             required: true,
             enum: {
-                values: ['Fiction', 'Non-Fiction', 'Children', 'Others', 'Fantasy'],
+                values: [
+                    'Fiction',
+                    'Non-Fiction',
+                    'Children',
+                    'Others',
+                    'Fantasy',
+                    'Mystery',
+                    'Thriller',
+                    'Self-Help',
+                    'Science',
+                    'Education',
+                ],
                 message: '{VALUE} is not the correct type',
             },
         },
-        aurther: {
+        language: {
+            type: String,
+            required: true,
+            enum: {
+                values: ['English', 'Hindi', 'Marathi', 'Gujarati', 'Sanskrit', 'Other'],
+                message: '{VALUE} is not the correct type',
+            },
+        },
+        author: {
             type: Schema.Types.ObjectId,
-            ref: 'Aurthor',
+            ref: 'Author',
             required: true,
             validate: {
                 validator: async function (value) {
-                    return mongoose.Types.ObjectId.isMongoId(value) && (await Aurthor.exists({ _id: value }));
+                    return validator.isMongoId(String(value)) && (await Author.exists({ _id: value }));
                 },
                 message: '{VALUE} is not a valid ObjectId',
             },
@@ -51,7 +70,7 @@ const BookSchema = new Schema(
             required: true,
             validate: {
                 validator: async function (value) {
-                    return mongoose.Types.ObjectId.isMongoId(value) && (await Shop.exists({ _id: value }));
+                    return validator.isMongoId(String(value)) && (await Shop.exists({ _id: value }));
                 },
                 message: '{VALUE} is not a valid ObjectId',
             },

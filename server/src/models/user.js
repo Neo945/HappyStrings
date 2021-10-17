@@ -101,19 +101,18 @@ const UserSchema = new Schema({
         type: String,
         trim: true,
         unique: true,
-        minLength: 12,
+        minLength: 10,
         validate: [isMobilePhone, 'Invalid Phone number'],
     },
     age: {
         type: Number,
         min: [12, 'Grow Up'],
     },
-    cart: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Book',
-        },
-    ],
+    address: {
+        type: String,
+        trim: true,
+        minlength: 10,
+    },
     wishlist: [
         {
             type: Schema.Types.ObjectId,
