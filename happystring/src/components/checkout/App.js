@@ -102,18 +102,19 @@ function InputData(props) {
       <form
         onSubmit={async (event) => {
           event.preventDefault();
-          const res = lookup(
+          const res = await lookup(
             "POST",
             {
               information,
-              cart: props.books,
+              cart: JSON.parse(localStorage.getItem("purchase")),
             },
             "/auth/checkout",
           );
+          console.log(res);
           if (res[1] === 201) {
-            props.fun(1, res[0].message);
+            props.fun({ status: 1, message: res[0].message });
           } else {
-            props.fun(1, res[0].message);
+            props.fun({ status: 1, message: res[0].message });
             alert("Something went wrong");
           }
           console.log(information);
@@ -398,7 +399,13 @@ export default function Checkout(props) {
           </Box>
         </div>
       ) : (
-        <Box width="100vw" height="100vh">
+        <Box
+          width="100vw"
+          height="100vh"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
           <Paper>
             <Typography variant="h4" align="center">
               {status.message}

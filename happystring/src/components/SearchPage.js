@@ -57,10 +57,10 @@ function CartBooks(props) {
           }}
         />
         <Typography variant="h5" style={{ marginTop: "10px" }} align="left">
-          {props.item.title}
+          {props.item.book.title}
         </Typography>
         <Typography variant="h6" style={{ marginTop: "10px" }} align="left">
-          {`₹${props.item.price}`}
+          {`₹${props.item.book.price}`}
         </Typography>
         <Box position="absolute" bottom="10px" width="90%">
           <Box
@@ -136,10 +136,26 @@ export default function SearchPage(props) {
       <Typography
         variant="h4"
         style={{
-          margin: "1.5%",
+          marginLeft: "1.5%",
+          marginTop: "1.5%",
         }}
       >
-        Cart
+        {`Search results for "${(() => {
+          const url = new URL(window.location.href);
+          try {
+            return url.searchParams.get("str").split(" ").join("+");
+          } catch (err) {
+            return "";
+          }
+        })()}"`}
+      </Typography>
+      <Typography
+        style={{
+          marginLeft: "1.5%",
+        }}
+        variant="div"
+      >
+        {books.length} books found
       </Typography>
       <Box display="flex" justifyContent="center">
         <Box width="25vw" display="flex" justifyContent="center">
@@ -263,6 +279,19 @@ export default function SearchPage(props) {
                 key={i}
               />
             ))}
+            <br />
+            {books.length === 0 ? (
+              <Typography
+                component="h5"
+                style={{
+                  margin: "1.5%",
+                }}
+              >
+                No string found
+              </Typography>
+            ) : (
+              ""
+            )}
           </Grid>
         </div>
       </Box>

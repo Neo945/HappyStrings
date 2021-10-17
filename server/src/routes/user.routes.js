@@ -22,7 +22,8 @@ router.get('/cart', view.getCart);
 router.post('/add/cart', view.addToCart);
 router.post('/remove/cart', view.removeFromCart);
 router.post('/remove/all/cart', view.removeAllFromCart);
-router.post('/orders', view.getOrder);
+router.get('/orders', view.getOrder);
 router.post('/purchase', view.getPurchaseHistory);
+router.post('/checkout', view.purchaseBook);
 
 module.exports = router;

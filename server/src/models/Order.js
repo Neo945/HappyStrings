@@ -15,6 +15,11 @@ const OrderSchema = new Schema(
             default: 'On the way',
             required: true,
         },
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
     },
     {
         timestamp: true,

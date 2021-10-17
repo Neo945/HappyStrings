@@ -6,15 +6,15 @@ const { Schema } = mongoose;
 
 const cardSchema = new Schema(
     {
-        name: {
+        cardname: {
             type: String,
             required: true,
         },
-        cardType: {
-            type: String,
-            required: true,
-            enum: ['Visa', 'MasterCard', 'American Express', 'Discover'],
-        },
+        // cardType: {
+        //     type: String,
+        //     required: true,
+        //     enum: ['Visa', 'MasterCard', 'American Express', 'Discover'],
+        // },
         cardNumber: {
             type: String,
             required: true,
@@ -25,11 +25,11 @@ const cardSchema = new Schema(
                 message: '{VALUE} is not a valid credit card number',
             },
         },
-        expirationDate: {
+        expiry: {
             type: String,
             required: true,
         },
-        cvv: {
+        cvc: {
             type: String,
             required: true,
         },
@@ -46,7 +46,7 @@ const cardSchema = new Schema(
 
 cardSchema.pre('save', async function (next) {
     const salt = await bcrypt.genSalt();
-    this.cvv = await bcrypt.hash(this.cvv, salt);
+    this.cvc = await bcrypt.hash(this.cvc, salt);
     next();
 });
 
@@ -56,7 +56,7 @@ cardSchema.statics.verifyCvv = async function (cvv, user, cardNumber) {
         return false;
     }
     // eslint-disable-next-line no-return-await
-    return await bcrypt.compare(cvv, card.cvv);
+    return await bcrypt.compare(cvv, card.cvc);
 };
 
 const Card = mongoose.model('Card', cardSchema);

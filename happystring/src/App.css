@@ -38,3 +38,30 @@
 .hs::-webkit-scrollbar {
   display: none;
 }
+.goog-te-banner-frame.skiptranslate {
+  display: none;
+}
+.skiptranslate.goog-te-gadget {
+  font-size: 0;
+}
+.skiptranslate.goog-te-gadget > span {
+  display: none;
+}
+.goog-te-combo {
+  width: 70px;
+  padding: 5px;
+  background-color: transparent;
+  color: white;
+  border-radius: 5px;
+  outline: none;
+}
+.goog-te-combo > option {
+  color: black;
+  width: 70px;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+#goog-gt-tt {
+  display: none;
+}

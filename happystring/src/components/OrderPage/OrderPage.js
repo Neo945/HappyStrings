@@ -23,13 +23,13 @@ function OrderPage() {
     lookup("GET", null, "/auth/orders").then((res) => {
       setBooks(res[0].order);
     });
-  });
-
+  }, []);
+  console.log("books", books);
   return (
     <>
       <Box height="7vh" />
       <Box width="100vw" height="93vh" style={{ overflowY: "scroll" }}>
-        {books.map((item) => (
+        {books?.map((item) => (
           <Paper key={item._id} className={classes.root}>
             <Grid container spacing={3}>
               <Grid item xs={3}>
@@ -41,20 +41,20 @@ function OrderPage() {
               </Grid>
               <Grid item xs={3}>
                 <div className="book-name">
-                  <h3>{books.book.product.title}</h3>
-                  <h4>{books.book.product.author.name}</h4>
+                  <h3>{item.book.product.title}</h3>
+                  <h4>{item.book.product.author.name}</h4>
                 </div>
               </Grid>
               <Grid item xs={3}>
                 <div className="book-price">
                   <h3>Price</h3>
-                  <h4>{books.book.product.price}</h4>
+                  <h4>{item.book.total}</h4>
                 </div>
               </Grid>
               <Grid item xs={3}>
                 <div className="status">
                   <h4>Status</h4>
-                  <p>{books.status}</p>
+                  <p>{item.status}</p>
                 </div>
               </Grid>
             </Grid>

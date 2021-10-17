@@ -35,7 +35,7 @@ const useStyle = makeStyles((theme) => ({
 
 function DetailsPage(props) {
   const classes = useStyle();
-  console.log(props.item);
+  console.log([{ ...props.item, quantity: 1 }]);
   return (
     <>
       <Box
@@ -91,7 +91,10 @@ function DetailsPage(props) {
               type="submit"
               variant="contained"
               onClick={() => {
-                localStorage.setItem("purchase", JSON.stringify([props.item]));
+                localStorage.setItem(
+                  "purchase",
+                  JSON.stringify([{ ...props.item, quantity: 1 }]),
+                );
                 window.location.href = "/checkout";
               }}
             >

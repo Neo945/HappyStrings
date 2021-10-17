@@ -139,6 +139,18 @@ function Navbar(props) {
                     "35px";
                   setSearch([]);
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    let search;
+                    try {
+                      search = searchText.split(" ").join("+");
+                    } catch (err) {
+                      search = "";
+                    }
+                    window.location.href = `/search?str=${search}`;
+                  }
+                }}
               />
               <SearchIcon style={{ fill: "#313131" }} />
             </Box>
@@ -184,6 +196,7 @@ function Navbar(props) {
             </Badge>
           </IconButton>
         </Box>
+        <div id="google_translate_element"></div>
       </Toolbar>
     </AppBar>
   );

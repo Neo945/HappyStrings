@@ -165,19 +165,31 @@ module.exports = {
             res,
             // eslint-disable-next-line consistent-return
             async () => {
-                if (!(await Card.varify(req.body.infomation.cvv, req.user._id, req.body.infomation.cardNumber))) {
+                if (!(await Card.exists({ user: req.user._id }))) {
+                    await Card.create({
+                        user: req.user._id,
+                        ...req.body.information,
+                    });
+                }
+                if (!(await Card.verifyCvv(req.body.information.cvc, req.user._id, req.body.information.cardNumber))) {
+                    console.log('cvv is wrong');
                     return res.status(403).json({ message: 'Card is not verified' });
                 }
-                const user = await User.findOne({ user: req.user._id });
                 const orderlist = [];
                 // eslint-disable-next-line no-restricted-syntax
-                for (const book of user.cart) {
+                for (const book of req.body.cart) {
                     const bookToPurchase = await Book.findById(book.book._id);
                     if (bookToPurchase.stock - book.quantity >= 0) bookToPurchase.stock -= book.quantity;
-                    else return res.status(400).json({ message: 'Not enough stock' });
+                    else bookToPurchase.stock = 0;
                     await bookToPurchase.save();
-                    const purchase = await Purchase.create({ user: user._id, book: book.book._id, quantity: book.quantity });
-                    const order = await Order.create({ user: user._id, purchase: purchase._id });
+                    const purchase = await Purchase.create({
+                        user: req.user._id,
+                        product: book.book._id,
+                        price: book.book.price,
+                        quantity: book.quantity,
+                        total: book.book.price * book.quantity,
+                    });
+                    const order = await Order.create({ user: req.user._id, book: purchase._id });
                     orderlist.push(order._id);
                 }
                 res.status(201).json({ message: 'success', orderlist });
@@ -228,12 +240,20 @@ module.exports = {
             req,
             res,
             async () => {
-                const user = await User.findOne({ user: req.user._id });
-                const order = await Order.find({ user: user._id })
-                    .populate('Purchase', '-_id')
-                    .populate('Book', '-_id -__v -stock')
-                    .populate('author', '-_id');
-                res.status(200).json({ message: 'success', order: { ...order } });
+                const order = await Order.find({ user: req.user._id })
+                    .populate('book', '-_id')
+                    .populate({
+                        path: 'book',
+                        populate: {
+                            path: 'product',
+                            model: 'Book',
+                            populate: {
+                                path: 'author',
+                                model: 'Author',
+                            },
+                        },
+                    });
+                res.status(200).json({ message: 'success', order });
             },
             500
         );

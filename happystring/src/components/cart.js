@@ -56,7 +56,7 @@ function CartBooks(props) {
           }}
         />
         <Typography variant="h5" style={{ marginTop: "10px" }} align="left">
-          {props.item.book.name}
+          {props.item.book.title}
         </Typography>
         <Box position="absolute" bottom="10px" width="90%">
           <Box
@@ -149,6 +149,18 @@ export default function CartV2(props) {
                 removeAll={props.removeAll}
               />
             ))}
+            {props.cart.length === 0 ? (
+              <Typography
+                component="h5"
+                style={{
+                  margin: "1.5%",
+                }}
+              >
+                Empty Cart
+              </Typography>
+            ) : (
+              ""
+            )}
           </Grid>
         </div>
         <div>
