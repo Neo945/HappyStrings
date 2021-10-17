@@ -18,6 +18,13 @@ import {
 } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import { useState, useEffect } from "react";
+<<<<<<< HEAD
+import OrderPage from "./OrderPage";
+import SearchPage from "./SearchPage";
+import DetailsPage from "./DetailsPage";
+import SuccessPage from "./SuccessPage";
+import OrderDetailsPage from "./OrderDetailsPage";
+=======
 import lookup from "./components/fetchData/lookup";
 
 function addToCart(setCart, book) {
@@ -39,6 +46,7 @@ function removeAllFromCart(setCart, book) {
 function addToPurchase(books) {
   localStorage.setItem("purchase", JSON.stringify(books));
 }
+>>>>>>> 0604cf59d5ed8be242c82cec838d71305bd974ce
 
 function App() {
   makeStyles((theme) => ({
@@ -121,8 +129,13 @@ function App() {
               buyNow={addToPurchase}
             />
           </Route>
+<<<<<<< HEAD
+          <Route path="/test">
+            <OrderDetailsPage />
+=======
           <Route path="/order">
             <OrderPage />
+>>>>>>> 0604cf59d5ed8be242c82cec838d71305bd974ce
           </Route>
 
           {/* <Route path="/test">
