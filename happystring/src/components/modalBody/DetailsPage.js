@@ -56,12 +56,12 @@ function DetailsPage(props) {
           <ReactImageMagnify
             {...{
               smallImage: {
-                alt: props.item.book.name,
+                alt: props.item.book.title,
                 isFluidWidth: true,
-                src: "https://cdn4.buysellads.net/uu/1/97758/1633132110-1633110694-158338930.jpg",
+                src: props.item.book.image,
               },
               largeImage: {
-                src: "https://cdn4.buysellads.net/uu/1/97758/1633132110-1633110694-158338930.jpg",
+                src: props.item.book.image,
                 width: 1200,
                 height: 1800,
               },

@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-await-in-loop */
 const { User, BaseUser } = require('../models/user');
 const Cart = require('../models/cart');
@@ -11,7 +12,8 @@ const Card = require('../models/creditCard');
 module.exports = {
     getUser: (req, res) => {
         errorHandler(req, res, async () => {
-            const artist = await User.findOne({ user: req.user._id }).populate('BaseUser', '-password');
+            const artist = await User.findOne({ user: req.user?._id }).populate('BaseUser', '-password');
+            console.log(artist);
             res.status(200).json({ message: 'success', artist });
         });
     },
@@ -100,14 +102,14 @@ module.exports = {
             res,
             async () => {
                 console.log(req.body);
-                if (await Cart.exists({ user: req.user._id, book: req.body._id })) {
-                    const cart = await Cart.findOne({ user: req.user._id, book: req.body._id });
+                if (await Cart.exists({ user: req.user._id, book: req.body.book._id })) {
+                    const cart = await Cart.findOne({ user: req.user._id, book: req.body.book._id });
                     cart.quantity += 1;
                     await cart.save();
                 } else {
                     await Cart.create({
                         user: req.user._id,
-                        book: req.body._id,
+                        book: req.body.book._id,
                         quantity: 1,
                     });
                 }
@@ -240,6 +242,9 @@ module.exports = {
             req,
             res,
             async () => {
+                if (!req.user) {
+                    return res.status(401).json({ message: 'Unauthrized' });
+                }
                 const order = await Order.find({ user: req.user._id })
                     .populate('book', '-_id')
                     .populate({

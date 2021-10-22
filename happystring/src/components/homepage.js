@@ -4,7 +4,6 @@ import BookModal from "./bookModal";
 import background from "./static/Background.png";
 import background2 from "./static/background2.png";
 import mobile from "./static/mobile.png";
-import book from "./static/book.jpg";
 import { useEffect, useState } from "react";
 import lookup from "./fetchData/lookup";
 
@@ -55,8 +54,7 @@ const useStyle = makeStyles((theme) => ({
     margin: "10px",
     backgroundColor: "transparent",
     position: "relative",
-    background: `url(${book}) no-repeat center`,
-    backgroundSize: "contain",
+    backgroundSize: "cover",
   },
   bottomtxt: {
     position: "absolute",
@@ -73,7 +71,7 @@ const useStyle = makeStyles((theme) => ({
 const HomePageBook = (props) => {
   const classes = useStyle();
   return (
-    <Paper className={classes.book} onClick={props.handleOpen}>
+    <Paper className={classes.book} style={{background: `url(${props.item.book.image}) no-repeat center`}} onClick={props.handleOpen}>
       <Paper className={classes.bottomtxt}>
         <Typography
           style={{
@@ -84,11 +82,11 @@ const HomePageBook = (props) => {
             alignItems: "center",
           }}
         >
-          {props.item.title}
+          {props.item.book.title}
         </Typography>
         <Typography
           style={{ width: "20%" }}
-        >{`₹${props.item.price}`}</Typography>
+        >{`₹${props.item.book.price}`}</Typography>
       </Paper>
     </Paper>
   );
@@ -173,7 +171,7 @@ export default function HomePage({ cart, add, setCart, remove }) {
                   <BookModal
                     key={i}
                     component={HomePageBook}
-                    item={book}
+                    item={{book}}
                     cart={cart}
                     add={add}
                     setCart={setCart}

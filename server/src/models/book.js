@@ -32,6 +32,7 @@ const BookSchema = new Schema(
                     'Self-Help',
                     'Science',
                     'Education',
+                    'Personal'
                 ],
                 message: '{VALUE} is not the correct type',
             },
@@ -40,7 +41,7 @@ const BookSchema = new Schema(
             type: String,
             required: true,
             enum: {
-                values: ['English', 'Hindi', 'Marathi', 'Gujarati', 'Sanskrit', 'Other'],
+                values: ['Tamil','English', 'Hindi', 'Marathi', 'Gujarati', 'Sanskrit', 'Other'],
                 message: '{VALUE} is not the correct type',
             },
         },

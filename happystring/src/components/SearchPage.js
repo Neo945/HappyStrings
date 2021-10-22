@@ -52,7 +52,7 @@ function CartBooks(props) {
           style={{
             width: "100%",
             height: "60%",
-            background: `url(${"https://picsum.photos/200/300"}) no-repeat center center`,
+            background: `url(${props.item.book.image}) no-repeat center center`,
             backgroundSize: "cover",
           }}
         />
@@ -85,33 +85,38 @@ function CartBooks(props) {
 }
 
 function filterValue(books, language, cat, value, setBooks) {
-  let filteredBooks = books.filter((book) => {
+  if (language.length !== 0)
+  {let filteredBooks = books.filter((book) => {
+    // console.log(language.includes(book.language), book.language);
     return language.includes(book.language);
   });
-  if (filteredBooks.length === 0) {
-    filteredBooks = books;
-  }
-  filteredBooks = filteredBooks.filter((book) => {
+  setBooks(filteredBooks);
+  return;
+}
+  else if (cat.length !== 0){
+let filteredBooks = books.filter((book) => {
     return cat.includes(book.category);
   });
-  if (filteredBooks.length === 0) {
-    filteredBooks = books;
-  }
-  filteredBooks = filteredBooks.filter((book) => {
-    // eslint-disable-next-line no-mixed-operators
-    return value[0] <= book.price < value[1];
-  });
-  if (filteredBooks.length === 0) {
-    filteredBooks = books;
-  }
   setBooks(filteredBooks);
+  return;
+  }
+  
+  else {
+let filteredBooks = books.filter((book) => {
+    console.log(value);
+    // eslint-disable-next-line no-mixed-operators
+    return value[0] <= book.price && book.price < value[1];
+  });
+  console.log(language,books, cat, value);
+  setBooks(filteredBooks);
+  }
 }
-
 export default function SearchPage(props) {
   const [value, setValue] = useState([100, 1000]);
   const [language, setLanguage] = useState([]);
   const [books, setBooks] = useState([]);
   const [cat, setCat] = useState([]);
+  const [bookValue, setBookValue] = useState([]);
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -122,13 +127,14 @@ export default function SearchPage(props) {
       search = "";
     }
     lookup("GET", null, `/book/search/1?search=${search}`).then((data) => {
+      setBookValue(data[0].books);
       setBooks(data[0].books);
     });
   }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    filterValue(books, language, cat, newValue, setBooks);
+    filterValue(bookValue, language, cat, newValue, setBooks);
   };
   return (
     <div>
@@ -176,7 +182,7 @@ export default function SearchPage(props) {
                       if (cat.includes(item)) {
                         setCat(cat.filter((cat) => cat !== item));
                         filterValue(
-                          books,
+                          bookValue,
                           language,
                           cat.filter((cat) => cat !== item),
                           value,
@@ -185,7 +191,7 @@ export default function SearchPage(props) {
                       } else {
                         setCat([...cat, item]);
                         filterValue(
-                          books,
+                          bookValue,
                           language,
                           [...cat, item],
                           value,
@@ -218,7 +224,7 @@ export default function SearchPage(props) {
                     if (language.includes(item)) {
                       setLanguage(language.filter((lang) => lang !== item));
                       filterValue(
-                        books,
+                        bookValue,
                         language.filter((lang) => lang !== item),
                         cat,
                         value,
@@ -227,7 +233,7 @@ export default function SearchPage(props) {
                     } else {
                       setLanguage([...language, item]);
                       filterValue(
-                        books,
+                        bookValue,
                         [...language, item],
                         cat,
                         value,

@@ -68,7 +68,7 @@ function CartBooks(props) {
               <IconButton
                 aria-label="add"
                 onClick={() => {
-                  props.add(props.setCart, props.item.book);
+                  props.add(props.setCart, props.item);
                 }}
               >
                 <AddIcon />

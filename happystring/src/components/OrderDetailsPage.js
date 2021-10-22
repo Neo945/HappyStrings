@@ -31,14 +31,9 @@ import {
   Typography,
   Card,
   CardContent,
-  Grid,
-  TextField,
-  Button,
   Box,
 } from "@material-ui/core";
 // import {bookElements, addbookElements} from './checkoutElements'
-import NavigateNextSharpIcon from "@material-ui/icons/NavigateNextSharp";
-import { DropzoneArea } from "material-ui-dropzone";
 import Book from "./props";
 
 class OrderDetailsPage extends React.Component {
