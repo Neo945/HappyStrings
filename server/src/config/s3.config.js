@@ -16,6 +16,24 @@ const deleteParams = {
         key: [],
     },
 };
+// const upload = (bucket) =>
+//     multer({
+//         storage: multerS3({
+//             s3: s3,
+//             bucket: bucket,
+//             metadata: function (req, file, cb) {
+//                 console.log('file metadata ', file);
+//                 cb(null, { fieldName: file.fieldname });
+//             },
+//             key: function (req, file, cb) {
+//                 console.log('file key ', file);
+//                 cb(null, 'auio.mp3');
+//             },
+//         }),
+//     });
+// const uploadSingle = upload('file').single('audio');
+
+// module.exports = { uploadSingle, s3 };
 const upload = (bucket) =>
     multer({
         storage: multerS3({
@@ -27,10 +45,13 @@ const upload = (bucket) =>
             },
             key: function (req, file, cb) {
                 console.log('file key ', file);
-                cb(null, 'auio.mp3');
+                const fileName = file.originalname.split('.');
+                const ext = fileName[fileName.length - 1]?.toLowerCase()
+                    ? fileName[fileName.length - 1]?.toLowerCase()
+                    : '';
+                cb(null, `${req.user?._id}/${req.body.title}.${ext}`);
             },
         }),
     });
-const uploadSingle = upload('file').single('audio');
-
+const uploadSingle = upload('musica-music').single('image');
 module.exports = { uploadSingle, s3 };

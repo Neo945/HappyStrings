@@ -9,6 +9,7 @@ import {
   OrderPage,
   CartV2,
   SearchPage,
+  AddBook,
 } from "./components";
 import {
   BrowserRouter as Router,
@@ -121,8 +122,9 @@ function App() {
               buyNow={addToPurchase}
             />
           </Route>
-          {/* <Route path="/test">
-            <OrderDetailsPage /> */}
+          <Route path="/test">
+            <AddBook />
+          </Route>
           <Route path="/order">
             <OrderPage />
           </Route>

@@ -1,7 +1,10 @@
+/* eslint-disable consistent-return */
+const validator = require('validator').default;
 const Book = require('../models/book');
 const Aurthor = require('../models/aurthor');
 const Shop = require('../models/shop');
 const { errorHandler } = require('../utils/errorHandler');
+const { uploadSingle } = require('../config/s3.config');
 
 module.exports = {
     // Get all the books
@@ -88,6 +91,7 @@ module.exports = {
                         { aurthor: { $regex: req.query.search, $options: 'i' } },
                         { category: { $regex: req.query.search, $options: 'i' } },
                     ],
+                    price: { $gt: 0 },
                 })
                     .limit(10 * parseInt(req.params.page, 10))
                     .populate('author');
@@ -97,17 +101,33 @@ module.exports = {
         );
     },
     createBook: async (req, res) => {
-        const { shop, author, book } = req.body;
         errorHandler(
             req,
             res,
             async () => {
-                const newBook = await Book.create({
-                    ...book,
-                    author: author.id ? author.id : (await Aurthor.create({ ...author }))._id,
-                    shop: shop.id ? shop.id : (await Shop.create({ ...shop }))._id,
+                uploadSingle(req, res, async (err) => {
+                    if (err) {
+                        return res.status(500).json({ error: err });
+                    }
+                    const newBook = await Book.create({
+                        ...req.body,
+                        image: req.file.location,
+                        author: validator.isMongoId(req.body.author) ? req.body.author : (await Aurthor.create({ name: req.body.author }))._id,
+                        shop: validator.isMongoId(req.body.shop) ? req.body.shop : (await Shop.create({ ...req.body }))._id,
+                    });
+                    res.status(201).json({ book: newBook });
                 });
-                res.status(201).json({ book: await newBook.populate('Author').populate('Shop') });
+            },
+            500
+        );
+    },
+    getAuthor: async (req, res) => {
+        errorHandler(
+            req,
+            res,
+            async () => {
+                const author = await Aurthor.find();
+                res.status(200).json({ author });
             },
             500
         );

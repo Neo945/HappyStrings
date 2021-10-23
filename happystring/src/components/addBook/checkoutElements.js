@@ -1,0 +1,47 @@
+export const addbookElements = [
+  {
+    name: "title",
+    label: "Book Name",
+    placeholder: "Enter Book Name",
+    variant: "outlined",
+    fullWidth: true,
+    required: true,
+    xs: 12,
+    sm: 12,
+  },
+
+  {
+    name: "description",
+    label: "Description",
+    multiline: true,
+    placeholder: "Enter description",
+    variant: "outlined",
+    fullWidth: true,
+    required: true,
+    xs: 12,
+    sm: 12,
+  },
+
+  {
+    name: "price",
+    type: "number",
+    label: "Book Price",
+    placeholder: "Enter Book Price in Rs (e.g 100)",
+    variant: "outlined",
+    fullWidth: true,
+    required: true,
+    xs: 12,
+    sm: 12,
+  },
+  {
+    name: "stock",
+    type: "number",
+    label: "Quantity",
+    placeholder: "Enter the number stock quantity",
+    variant: "outlined",
+    fullWidth: true,
+    required: true,
+    xs: 12,
+    sm: 12,
+  },
+];
